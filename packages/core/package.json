@@ -1,6 +1,6 @@
 {
     "name": "@nger/core",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "description": "> TODO: description",
     "author": "imeepos <1037483576@qq.com>",
     "homepage": "https://github.com/meepobrother/nger-core#readme",
@@ -29,6 +29,6 @@
         "url": "https://github.com/meepobrother/nger-core/issues"
     },
     "dependencies": {
-        "@nger/di": "^1.2.1"
+        "@nger/di": "^1.2.2"
     }
 }

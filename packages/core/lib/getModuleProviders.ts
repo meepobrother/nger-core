@@ -23,7 +23,13 @@ export function getModuleProviders(moduleType: Type<any>) {
                 })
             }
             if (providers) {
-                staticProviders.push(...providers.map(provider => providerToStaticProvider(provider)))
+                providers.map(provider => {
+                    if (Array.isArray(provider)) {
+                        staticProviders.push(...provider.map(pro => providerToStaticProvider(pro)))
+                    } else {
+                        staticProviders.push(providerToStaticProvider(provider))
+                    }
+                })
             }
             return {
                 providers: staticProviders,
