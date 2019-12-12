@@ -27,11 +27,11 @@ export class Demo2Module implements OnModuleInit {
 })
 export class DemoModule implements OnModuleInit {
     random: number = Math.random() * 10000;
-    constructor(public injector: Injector) { }
+    constructor(public injector: Injector) {
+        console.log(`demo module`)
+    }
     ngOnModuleInit() {
         console.log(`demo module on module init`, this.random)
     }
 }
-corePlatform([]).bootstrapModule(DemoModule).then(res => {
-    debugger;
-});
+corePlatform([]).bootstrapModule(DemoModule).then(res => res.onInit());

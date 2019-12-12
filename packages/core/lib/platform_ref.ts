@@ -1,5 +1,6 @@
 import { Injector, Type, InjectFlags } from '@nger/di';
-import { NgModuleFactory, NgModuleRef, compileNgModuleFactory } from './compilerFactory'
+import { compileNgModuleFactory } from './compilerFactory';
+import { NgModuleRef, NgModuleFactory } from './types';
 import { ErrorHandler } from './error_handler';
 import { remove, optionsReducer } from './lang'
 import { ApplicationInitStatus } from './application_init_status'
@@ -29,20 +30,16 @@ export class PlatformRef {
         moduleFactory: NgModuleFactory<M>
     ): Promise<NgModuleRef<M>> {
         // todo 注入启动参数
-        const moduleRef = await moduleFactory.create();
+        const moduleRef = await moduleFactory.create(this.injector);
         const exceptionHandler = moduleRef.injector.get(ErrorHandler, undefined) as ErrorHandler;
         if (!exceptionHandler) {
             throw new Error('No ErrorHandler. Please Regist ErrorHandler');
         }
         moduleRef.onDestroy(() => remove(this._modules, moduleRef));
-        moduleRef.injector.setStatic([{
-            provide: NgModuleRef,
-            useValue: moduleRef
-        }]);
         const initStatus: ApplicationInitStatus = moduleRef.injector.get(ApplicationInitStatus, undefined, InjectFlags.Optional);
         await initStatus.runInitializers();
         await this._moduleDoBootstrap(moduleRef);
-        await moduleRef.onInit();
+        // await moduleRef.onInit();
         return moduleRef;
     }
 
