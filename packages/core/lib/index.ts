@@ -19,3 +19,4 @@ export * from './handler';
 export * from './pipeTransform';
 export * from './logger';
 export * from './guard';
+export * from './config';
