@@ -10,3 +10,4 @@ export * from './life_hooks';
 export * from './core';
 export * from '@nger/di';
 export * from './isDevMode';
+export * from './types';
