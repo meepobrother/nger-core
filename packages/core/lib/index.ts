@@ -16,3 +16,6 @@ export * from './providerToStaticProvicer';
 export * from './decorator';
 export * from './token';
 export * from './handler';
+export * from './pipeTransform';
+export * from './logger';
+export * from './guard';

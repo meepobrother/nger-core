@@ -22,7 +22,10 @@ export class NgModuleRef<T> {
     exports: { token: any, record: any }[] = [];
     controllers: ControllerFactory<any>[] = [];
     constructor(injector: Injector, instance: Type<T>, imports: NgModuleRef<any>[], exports: any[] = [], controllers: ControllerFactory<any>[] = []) {
-        this.injector = injector;
+        this.injector = injector.create([{
+            provide: NgModuleRef,
+            useValue: this
+        }]);
         this.exports = exports.map(it => ({ token: it, record: this.injector.getRecord(it) }));
         this.imports.map(imp => imp.exports.map(it => {
             injector.setRecord(it.token, it.record);

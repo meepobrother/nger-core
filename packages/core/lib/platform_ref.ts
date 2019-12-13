@@ -31,15 +31,21 @@ export class PlatformRef {
     ): Promise<NgModuleRef<M>> {
         // todo 注入启动参数
         const moduleRef = await moduleFactory.create(this.injector);
-        const exceptionHandler = moduleRef.injector.get(ErrorHandler, undefined) as ErrorHandler;
+        this.injector.setStatic([{
+            provide: NgModuleFactory,
+            useValue: moduleFactory
+        }, {
+            provide: NgModuleRef,
+            useValue: moduleRef
+        }]);
+        const exceptionHandler = moduleRef.injector.get(ErrorHandler, null) as ErrorHandler;
         if (!exceptionHandler) {
             throw new Error('No ErrorHandler. Please Regist ErrorHandler');
         }
         moduleRef.onDestroy(() => remove(this._modules, moduleRef));
-        const initStatus: ApplicationInitStatus = moduleRef.injector.get(ApplicationInitStatus, undefined, InjectFlags.Optional);
-        await initStatus.runInitializers();
+        const initStatus: ApplicationInitStatus = moduleRef.injector.get(ApplicationInitStatus, null, InjectFlags.Optional);
+        if (initStatus) await initStatus.runInitializers();
         await this._moduleDoBootstrap(moduleRef);
-        // await moduleRef.onInit();
         return moduleRef;
     }
 

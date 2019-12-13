@@ -33,6 +33,7 @@ export const ControllerMetadataKey = `ControllerMetadataKey`;
 export interface ControllerOptions {
     path: PathParams;
     providers?: (Provider | Provider[])[];
+    useGuards?: Type<any>[];
 }
 export const Controller = createClassDecorator<ControllerOptions | string>(ControllerMetadataKey, (item: IClassDecorator<any, ControllerOptions | string>) => {
     if (item.options) {
