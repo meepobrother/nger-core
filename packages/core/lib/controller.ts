@@ -32,8 +32,7 @@ export class ControllerFactory<T> {
         }
     }
     create(injector?: Injector): T {
-        const _injector = injector || this.injector;
-        _injector.setStatic([providerToStaticProvider({ provide: this._type })]);
+        const _injector = (injector || this.injector).create([providerToStaticProvider(this._type)]);
         const instance = _injector.get(this._type);
         const that = this;
         return new Proxy(instance, {
