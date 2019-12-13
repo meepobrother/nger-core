@@ -112,6 +112,11 @@ export const Ip = createParameterDecorator<Ip>(IpMetadataKey)
 export const SessionMetadataKey = `SessionMetadataKey`
 interface Session { }
 export const Session = createParameterDecorator<Session>(SessionMetadataKey)
+
+export const CookiesMetadataKey = `CookiesMetadataKey`
+interface Cookies { }
+export const Cookies = createParameterDecorator<Cookies>(CookiesMetadataKey)
+
 export const UploadedFileMetadataKey = `UploadedFileMetadataKey`
 export const UploadedFile = createParameterDecorator<string>(UploadedFileMetadataKey)
 export const UploadedFilesMetadataKey = `UploadedFilesMetadataKey`
