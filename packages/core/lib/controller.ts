@@ -31,8 +31,9 @@ export class ControllerFactory<T> {
             throw new Error(`Create Controller Factory Fail!`)
         }
     }
-    create(): T {
-        const instance = this.injector.get(this._type);
+    create(injector?: Injector): T {
+        const _injector = injector || this.injector;
+        const instance = _injector.get(this._type);
         const that = this;
         return new Proxy(instance, {
             get(target: any, p: PropertyKey, receiver: any) {
@@ -44,11 +45,11 @@ export class ControllerFactory<T> {
                         return (...args: any[]) => {
                             const parameters = new Array(decorators[0].parameters.length);
                             decorators.map(it => {
-                                const methodHandler = that.injector.get<MethodHandler>(it.metadataKey!, null, InjectFlags.Optional);
-                                methodHandler && methodHandler(callHandler, instance, that.injector, it);
+                                const methodHandler = _injector.get<MethodHandler>(it.metadataKey!, null, InjectFlags.Optional);
+                                methodHandler && methodHandler(callHandler, instance, _injector, it);
                                 it.parameters.map(parameter => {
-                                    const handler = that.injector.get<ParameterHandler>(parameter.metadataKey, null, InjectFlags.Optional);
-                                    handler && handler(callHandler, parameters, instance, that.injector, parameter);
+                                    const handler = _injector.get<ParameterHandler>(parameter.metadataKey, null, InjectFlags.Optional);
+                                    handler && handler(callHandler, parameters, instance, _injector, parameter);
                                 })
                             });
                             const pars = parameters.map((it, index) => {
@@ -60,8 +61,8 @@ export class ControllerFactory<T> {
                     return callHandler;
                 } else {
                     that.metadata.properties.filter(it => it.property === p).map(it => {
-                        const methodHandler = that.injector.get<PropertyHandler>(it.metadataKey!, null, InjectFlags.Optional);
-                        methodHandler && methodHandler(callHandler, instance, that.injector, it);
+                        const methodHandler = _injector.get<PropertyHandler>(it.metadataKey!, null, InjectFlags.Optional);
+                        methodHandler && methodHandler(callHandler, instance, _injector, it);
                     });
                 }
                 return callHandler;

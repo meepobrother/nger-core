@@ -11,7 +11,7 @@ export interface MethodHandler<T = any, O = any> {
     (handler: Function, instance: T, injector: Injector, parameter: IMethodDecorator<any, O>): void;
 }
 export interface HttpMethodHandler<T = any, O = any> {
-    (instance: T, injector: ControllerFactory<T>, decorator: IMethodDecorator<T, O>): void;
+    (controller: ControllerFactory<T>, decorator: IMethodDecorator<T, O>): void;
 }
 export interface HttpResponseHandler<T> {
     (data: T, injector: Injector): T;
