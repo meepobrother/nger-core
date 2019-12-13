@@ -1,7 +1,10 @@
-export function isPromise(obj: any): obj is Promise<any> {
+import { Observable } from 'rxjs';
+export function isPromise<T = any>(obj: any): obj is Promise<T> {
     return !!obj && typeof obj.then === 'function';
 }
-
+export function isObservable<T = any>(val: any): val is Observable<T> {
+    return !!val && typeof val.subscribe === 'function'
+}
 export function remove<T>(list: T[], el: T): void {
     const index = list.indexOf(el);
     if (index > -1) {

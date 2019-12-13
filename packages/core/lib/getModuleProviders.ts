@@ -1,4 +1,6 @@
-import { Type, ModuleMetadataKey, StaticProvider, isTypeProvider, providerToStaticProvider, ModuleOptions } from '@nger/di';
+import { Type, StaticProvider, isTypeProvider } from '@nger/di';
+import { ModuleMetadataKey, ModuleOptions } from './decorator';
+import { providerToStaticProvider } from './providerToStaticProvicer';
 import { getINgerDecorator, IClassDecorator } from '@nger/decorator';
 export function getModuleProviders(moduleType: Type<any>) {
     const staticProviders: StaticProvider[] = [];
@@ -9,7 +11,7 @@ export function getModuleProviders(moduleType: Type<any>) {
     if (mdouleMetadata) {
         const { options, parameters } = mdouleMetadata;
         if (options) {
-            let { id, providers, imports, exports: _exports, bootstrap } = options;
+            let { id, providers, imports, exports: _exports, bootstrap, controllers } = options;
             if (imports) {
                 imports.map(async (it) => {
                     if (isTypeProvider(it)) {
@@ -36,9 +38,10 @@ export function getModuleProviders(moduleType: Type<any>) {
                 id: id || moduleType.name,
                 imports: staticImports || [],
                 exports: _exports || [],
-                bootstrap
+                bootstrap,
+                controllers: controllers || []
             }
         }
     }
-    return { providers: staticProviders, id: moduleType.name, imports: staticImports, exports: [], bootstrap: undefined };
+    return { providers: staticProviders, id: moduleType.name, imports: staticImports, exports: [], controllers: [], bootstrap: undefined };
 }

@@ -11,3 +11,8 @@ export * from './core';
 export * from '@nger/di';
 export * from './isDevMode';
 export * from './types';
+export * from './controller';
+export * from './providerToStaticProvicer';
+export * from './decorator';
+export * from './token';
+export * from './handler';

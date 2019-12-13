@@ -1,8 +1,9 @@
 import { createPlatformFactory, PlatformRef, PLATFORM_INITIALIZER, CompilerFactory, ErrorHandler, ApplicationInitStatus, APP_INITIALIZER } from '../lib';
-import { providerToStaticProvider } from '@nger/di';
-import { INJECTOR, Injector } from '@nger/di/lib/injector_ng';
+import { providerToStaticProvider } from './providerToStaticProvicer';
+import { Injector } from '@nger/di';
+
 export class CoreErrorHandler extends ErrorHandler {
-    handleError(error: any): void {
+    handleError(error: any, injector: Injector): void {
         console.error(error)
     }
 }
@@ -10,7 +11,7 @@ export const corePlatform = createPlatformFactory(null, 'core', [
     {
         provide: PlatformRef,
         useFactory: (injector: Injector) => new PlatformRef(injector),
-        deps: [INJECTOR]
+        deps: [Injector]
     }, {
         provide: PLATFORM_INITIALIZER,
         useValue: () => { },
