@@ -1,5 +1,5 @@
 import { Injector } from "@nger/di";
-import { IPropertyDecorator, IParameterDecorator, IMethodDecorator } from '@nger/decorator';
+import { IPropertyDecorator, IParameterDecorator, IMethodDecorator, IClassDecorator, INgerDecorator } from '@nger/decorator';
 import { ControllerFactory } from "./controller";
 export interface ParameterHandler<T = any, O = any> {
     (handler: Function, parameters: Array<any>, instance: T, injector: Injector, parameter: IParameterDecorator<any, O>): void;
@@ -15,4 +15,7 @@ export interface HttpMethodHandler<T = any, O = any> {
 }
 export interface HttpResponseHandler<T> {
     (data: T, injector: Injector): T;
+}
+export interface ClassHandler<T, O> {
+    (factory: ControllerFactory<T>, decorator: IClassDecorator<T, O>): void;
 }
