@@ -46,6 +46,8 @@ export class PlatformRef {
         const initStatus: ApplicationInitStatus = moduleRef.injector.get(ApplicationInitStatus, null, InjectFlags.Optional);
         if (initStatus) await initStatus.runInitializers();
         await this._moduleDoBootstrap(moduleRef);
+        await moduleRef.onInit();
+        this.onDestroy(moduleRef.destroy.bind(moduleRef))
         return moduleRef;
     }
 

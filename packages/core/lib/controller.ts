@@ -7,7 +7,7 @@ import {
     IClassDecorator, IMethodDecorator
 } from '@nger/decorator';
 import { MethodHandler, ParameterHandler, PropertyHandler } from './handler';
-import { NgModuleFactory, NgModuleRef } from "./types";
+import { NgModuleRef } from "./types";
 export class ControllerFactory<T> {
     metadata: INgerDecorator<T>;
     path: PathParams;

@@ -13,7 +13,7 @@ export function getModuleProviders(moduleType: Type<any>) {
         if (options) {
             let { id, providers, imports, exports: _exports, bootstrap, controllers } = options;
             if (imports) {
-                imports.map(async (it) => {
+                imports.map((it) => {
                     if (isTypeProvider(it)) {
                         staticProviders.push(providerToStaticProvider(it))
                         staticImports.push(it)
