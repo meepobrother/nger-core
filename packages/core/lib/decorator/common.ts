@@ -34,7 +34,6 @@ export interface ControllerOptions {
     path: PathParams;
     providers?: (Provider | Provider[])[];
     useGuards?: Type<any>[];
-    imports?: Array<Type<any> | ModuleWithProviders<any>>;
 }
 export const Controller = createClassDecorator<ControllerOptions | string>(ControllerMetadataKey, (item: IClassDecorator<any, ControllerOptions | string>) => {
     if (item.options) {

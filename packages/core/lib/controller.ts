@@ -1,4 +1,4 @@
-import { Injector, InjectFlags } from "@nger/di";
+import { Injector, InjectFlags, isTypeProvider } from "@nger/di";
 import { ControllerOptions, ControllerMetadataKey } from './decorator';
 import { providerToStaticProvider } from './providerToStaticProvicer';
 import { PathParams } from './decorator/types';
@@ -7,10 +7,12 @@ import {
     IClassDecorator, IMethodDecorator
 } from '@nger/decorator';
 import { MethodHandler, ParameterHandler, PropertyHandler } from './handler';
+import { NgModuleFactory, NgModuleRef } from "./types";
 export class ControllerFactory<T> {
     metadata: INgerDecorator<T>;
     path: PathParams;
     injector: Injector;
+    imports: NgModuleRef<any>[];
     constructor(private _type: Type<T>, injector: Injector) {
         injector.setStatic([providerToStaticProvider(_type)])
         this.metadata = getINgerDecorator(_type);
@@ -18,12 +20,14 @@ export class ControllerFactory<T> {
         if (controllerDef) {
             if (controllerDef.options) {
                 this.path = controllerDef.options.path;
-                this.injector = injector.create((controllerDef.options.providers || []).map(it => {
+                const { providers } = controllerDef.options;
+                const staticProviders = (providers || []).map(it => {
                     if (Array.isArray(it)) {
                         return it.map(i => providerToStaticProvider(i))
                     }
                     return providerToStaticProvider(it)
-                }).flat(), this._type.name)
+                }).flat();
+                this.injector = injector.create(staticProviders, this._type.name)
             } else {
                 throw new Error(`Create Controller Factory Fail!`)
             }
