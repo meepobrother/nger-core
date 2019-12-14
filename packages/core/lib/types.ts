@@ -11,6 +11,7 @@ export class NgModuleFactory<T> {
         const moduleDef = getModuleProviders(this.moduleType);
         const injector = parentInjector.create(moduleDef.providers, moduleDef.id || this.moduleType.name);
         const deps = moduleDef.imports.map(imp => new NgModuleFactory(imp)).map(fac => fac.create(injector));
+        deps.map(dep => dep.exports).flat().map(it => injector.setRecord(it.token, it.record));
         const ctrl = moduleDef.controllers.map(ctrl => new ControllerFactory(ctrl, injector))
         return new NgModuleRef<T>(injector, this.moduleType, deps, moduleDef.exports, ctrl);
     }

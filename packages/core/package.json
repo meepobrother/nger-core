@@ -1,6 +1,6 @@
 {
     "name": "@nger/core",
-    "version": "1.5.9",
+    "version": "1.6.1",
     "description": "> TODO: description",
     "author": "imeepos <1037483576@qq.com>",
     "homepage": "https://github.com/meepobrother/nger-core#readme",
@@ -30,7 +30,7 @@
     },
     "dependencies": {
         "@nger/decorator": "^1.1.5",
-        "@nger/di": "^1.3.1",
+        "@nger/di": "^1.3.2",
         "rxjs": "^6.5.3"
     }
 }
