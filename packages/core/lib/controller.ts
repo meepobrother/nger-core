@@ -1,38 +1,40 @@
-import { Injector, InjectFlags, providerToStaticProvider } from "@nger/di";
+import { Injector, InjectFlags, providerToStaticProvider, StaticProvider } from "@nger/di";
 import { ControllerOptions, ControllerMetadataKey } from './decorator';
 import { PathParams } from './decorator/types';
 import {
     getINgerDecorator, INgerDecorator, Type,
     IClassDecorator, IMethodDecorator
 } from '@nger/decorator';
-import { MethodHandler, ParameterHandler, PropertyHandler } from './handler';
+import { MethodHandler, ParameterHandler, PropertyHandler, ClassHandler } from './handler';
 import { NgModuleRef } from "./types";
-export class ControllerFactory<T> {
-    metadata: INgerDecorator<T>;
-    path: PathParams;
-    injector: Injector;
-    imports: NgModuleRef<any>[];
-    constructor(private _type: Type<T>, injector: Injector) {
-        injector.setStatic([providerToStaticProvider(_type)])
-        this.metadata = getINgerDecorator(_type);
-        const controllerDef = this.metadata.classes.find(it => it.metadataKey === ControllerMetadataKey) as IClassDecorator<T, ControllerOptions>;
-        if (controllerDef) {
-            if (controllerDef.options) {
-                this.path = controllerDef.options.path;
-                const { providers } = controllerDef.options;
-                const staticProviders = (providers || []).map(it => {
-                    if (Array.isArray(it)) {
-                        return it.map(i => providerToStaticProvider(i))
-                    }
-                    return providerToStaticProvider(it)
-                }).flat();
-                this.injector = injector.create(staticProviders, this._type.name)
-            } else {
-                throw new Error(`Create Controller Factory Fail!`)
-            }
-        } else {
-            throw new Error(`Create Controller Factory Fail!`)
+export const controllerProvider: StaticProvider = {
+    provide: ControllerMetadataKey,
+    useValue: (factory: ControllerFactory<any>, decorator: IClassDecorator<any, ControllerOptions>) => {
+        if (decorator.options) {
+            factory.path = decorator.options.path;
+            const { providers } = decorator.options;
+            const staticProviders = (providers || []).map(it => {
+                if (Array.isArray(it)) {
+                    return it.map(i => providerToStaticProvider(i))
+                }
+                return providerToStaticProvider(it)
+            }).flat();
+            factory.injector.setStatic(staticProviders)
         }
+    }
+}
+export class ControllerFactory<T> {
+    readonly metadata: INgerDecorator<T>;
+    path: PathParams;
+    readonly injector: Injector;
+    readonly imports: NgModuleRef<any>[];
+    constructor(public readonly _type: Type<T>, injector: Injector) {
+        this.injector = injector.create([providerToStaticProvider(_type)], this._type.name);
+        this.metadata = getINgerDecorator(_type);
+        this.metadata.classes.map(it => {
+            const handler = injector.get<ClassHandler<T, any>>(it.metadataKey);
+            if (handler) handler(this, it)
+        });
     }
     create(injector?: Injector): T {
         const _injector = (injector || this.injector).create([providerToStaticProvider(this._type)]);
