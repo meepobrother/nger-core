@@ -1,7 +1,6 @@
 
 import { isPromise } from './lang';
-import { InjectionToken } from '@nger/di';
-import { Optional, Injectable, Inject } from './decorator';
+import { InjectionToken, Optional, Inject, Injectable } from '@nger/di';
 export const APP_INITIALIZER = new InjectionToken<Array<() => void>>('Application Initializer');
 @Injectable()
 export class ApplicationInitStatus {

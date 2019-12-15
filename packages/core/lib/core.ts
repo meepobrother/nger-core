@@ -1,6 +1,5 @@
 import { createPlatformFactory, PlatformRef, PLATFORM_INITIALIZER, CompilerFactory, ErrorHandler, ApplicationInitStatus, APP_INITIALIZER } from '../lib';
-import { providerToStaticProvider } from './providerToStaticProvicer';
-import { Injector } from '@nger/di';
+import { Injector, providerToStaticProvider } from '@nger/di';
 
 export class CoreErrorHandler extends ErrorHandler {
     handleError(error: any, injector: Injector): void {

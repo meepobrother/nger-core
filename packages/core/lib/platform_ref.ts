@@ -79,4 +79,3 @@ export class PlatformRef {
         this._destroyed = true;
     }
 }
-

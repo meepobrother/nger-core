@@ -1,5 +1,4 @@
 import { InjectionToken } from "@nger/di"
-
 export const AppToken = new InjectionToken(`AppToken`)
 export const RequestToken = new InjectionToken(`RequestToken`)
 export const ResponseToken = new InjectionToken(`ResponseToken`)

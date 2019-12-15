@@ -1,6 +1,5 @@
-import { Injector, InjectFlags, isTypeProvider } from "@nger/di";
+import { Injector, InjectFlags, providerToStaticProvider } from "@nger/di";
 import { ControllerOptions, ControllerMetadataKey } from './decorator';
-import { providerToStaticProvider } from './providerToStaticProvicer';
 import { PathParams } from './decorator/types';
 import {
     getINgerDecorator, INgerDecorator, Type,

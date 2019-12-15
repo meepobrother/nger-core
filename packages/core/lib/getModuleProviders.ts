@@ -1,6 +1,5 @@
-import { Type, StaticProvider, isTypeProvider } from '@nger/di';
+import { Type, StaticProvider, isTypeProvider, providerToStaticProvider } from '@nger/di';
 import { ModuleMetadataKey, ModuleOptions } from './decorator';
-import { providerToStaticProvider } from './providerToStaticProvicer';
 import { getINgerDecorator, IClassDecorator } from '@nger/decorator';
 export function getModuleProviders(moduleType: Type<any>) {
     const staticProviders: StaticProvider[] = [];
