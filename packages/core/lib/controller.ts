@@ -1,4 +1,4 @@
-import { Injector, InjectFlags, providerToStaticProvider, StaticProvider } from "@nger/di";
+import { Injector, InjectFlags, providerToStaticProvider, StaticProvider, InjectableMetadataKey, InjectableOptions } from "@nger/di";
 import { ControllerOptions, ControllerMetadataKey } from './decorator';
 import { PathParams } from './decorator/types';
 import {
@@ -20,6 +20,25 @@ export const controllerProvider: StaticProvider = {
                 return providerToStaticProvider(it)
             }).flat();
             factory.injector.setStatic(staticProviders)
+        }
+    }
+}
+export const injectableProvider: StaticProvider = {
+    provide: InjectableMetadataKey,
+    useValue: (factory: ControllerFactory<any>, decorator: IClassDecorator<any, InjectableOptions>) => {
+        if (decorator.options) {
+            const options = decorator.options;
+            if (options) {
+                if (options.factory) {
+                    factory.injector.setStatic([{
+                        provide: decorator.type,
+                        useFactory: options.factory,
+                        deps: options.deps
+                    }])
+                } else {
+                    factory.injector.setStatic([providerToStaticProvider(decorator.type)])
+                }
+            }
         }
     }
 }
@@ -48,18 +67,18 @@ export class ControllerFactory<T> {
                     const decorators = that.metadata.methods.filter(it => it.property === p) as IMethodDecorator<T, any>[];
                     if (decorators && decorators.length > 0) {
                         return (...args: any[]) => {
-                            const parameters = new Array(decorators[0].parameters.length);
+                            const parameters = new Array(decorators[0].paramTypes.length);
                             decorators.map(it => {
                                 const methodHandler = _injector.get<MethodHandler>(it.metadataKey!, null, InjectFlags.Optional);
-                                methodHandler && methodHandler(callHandler, instance, _injector, it);
+                                methodHandler && methodHandler(callHandler, target, _injector, it);
                                 it.parameters.map(parameter => {
                                     const handler = _injector.get<ParameterHandler>(parameter.metadataKey, null, InjectFlags.Optional);
-                                    handler && handler(callHandler, parameters, instance, _injector, parameter);
+                                    handler && handler(callHandler, parameters, target, _injector, parameter);
                                 })
                             });
                             const pars = parameters.map((it, index) => {
                                 return Reflect.get(args, index) || it;
-                            })
+                            });
                             return callHandler.bind(target)(...pars)
                         }
                     }
@@ -67,10 +86,10 @@ export class ControllerFactory<T> {
                 } else {
                     that.metadata.properties.filter(it => it.property === p).map(it => {
                         const methodHandler = _injector.get<PropertyHandler>(it.metadataKey!, null, InjectFlags.Optional);
-                        methodHandler && methodHandler(callHandler, instance, _injector, it);
+                        methodHandler && methodHandler(callHandler, target, _injector, it);
                     });
+                    return Reflect.get(target, p)
                 }
-                return callHandler;
             }
         })
     }

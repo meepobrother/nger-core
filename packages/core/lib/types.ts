@@ -1,4 +1,4 @@
-import { Injector, Type } from "@nger/di"
+import { Injector, Type, StaticProvider } from "@nger/di"
 import { getModuleProviders } from "./getModuleProviders";
 import { isWithOnModuleInit } from './life_hooks';
 import { ControllerFactory } from "./controller";
@@ -33,6 +33,7 @@ export class NgModuleRef<T> {
         this.imports.map(imp => imp.exports.map(it => {
             injector.setRecord(it.token, it.record);
         }));
+        this.injector.setStatic(controllers.map(it => ({ provide: it._type, useFactory: () => it.create(), deps: [] } as StaticProvider)));
         this.instance = injector.get(instance);
         this.imports = imports;
         this.controllers = controllers;
