@@ -7,3 +7,5 @@ export const RouterToken = new InjectionToken(`RouterToken`)
 export const PathToken = new InjectionToken(`PathToken`)
 export const ResponseHandlerToken = new InjectionToken(`ResponseHandlerToken`)
 export const RequestId = new InjectionToken(`RequestId`)
+
+export const RootActionReducerMapToken = new InjectionToken<any[]>(`RootActionReducerMapToken`);
