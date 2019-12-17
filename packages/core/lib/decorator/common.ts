@@ -11,7 +11,7 @@ export interface ModuleOptions {
     imports?: Array<Type<any> | ModuleWithProviders<any>>;
     exports?: Array<any>;
     bootstrap?: Array<Type<any>>;
-    controllers?: Array<Type<any>>;
+    controllers?: (Provider[] | Provider)[];
 }
 export const Module = createClassDecorator<ModuleOptions>(ModuleMetadataKey);
 export const NgModule = Module;

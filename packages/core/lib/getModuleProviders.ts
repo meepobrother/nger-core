@@ -1,7 +1,14 @@
-import { Type, StaticProvider, isTypeProvider, providerToStaticProvider } from '@nger/di';
+import { Type, StaticProvider, isTypeProvider, providerToStaticProvider, stringify } from '@nger/di';
 import { ModuleMetadataKey, ModuleOptions } from './decorator';
 import { getINgerDecorator, IClassDecorator } from '@nger/decorator';
-export function getModuleProviders(moduleType: Type<any>) {
+export function getModuleProviders(moduleType: Type<any>): {
+    providers: StaticProvider[],
+    id: string,
+    imports: Type<any>[],
+    exports: StaticProvider[],
+    controllers: StaticProvider[],
+    bootstrap: Type<any>[]
+} {
     const staticProviders: StaticProvider[] = [];
     const staticImports: any[] = [];
     const nger = getINgerDecorator(moduleType);
@@ -32,15 +39,30 @@ export function getModuleProviders(moduleType: Type<any>) {
                     }
                 })
             }
+            const _controllers = (controllers || []).map(it => {
+                if (Array.isArray(it)) {
+                    return it.map(it => providerToStaticProvider(it))
+                } else {
+                    return providerToStaticProvider(it)
+                }
+            }).flat();
+            _exports = (_exports || []).map(it => {
+                const provider = staticProviders.find(pro => pro.provide === it);
+                if (provider) {
+                    return provider;
+                } else {
+                    throw new Error(`can not exports ${stringify(it)}`)
+                }
+            });
             return {
                 providers: staticProviders,
                 id: id || moduleType.name,
                 imports: staticImports || [],
                 exports: _exports || [],
-                bootstrap,
-                controllers: controllers || []
+                bootstrap: bootstrap || [],
+                controllers: _controllers
             }
         }
     }
-    return { providers: staticProviders, id: moduleType.name, imports: staticImports, exports: [], controllers: [], bootstrap: undefined };
+    return { providers: staticProviders, id: moduleType.name, imports: staticImports, exports: [], controllers: [], bootstrap: [] };
 }

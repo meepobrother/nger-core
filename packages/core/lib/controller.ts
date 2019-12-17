@@ -48,7 +48,7 @@ export class ControllerFactory<T> {
     readonly injector: Injector;
     readonly imports: NgModuleRef<any>[];
     constructor(public readonly _type: Type<T>, injector: Injector) {
-        this.injector = injector.create([providerToStaticProvider(_type)], this._type.name);
+        this.injector = injector.create([], this._type.name);
         this.metadata = getINgerDecorator(_type);
         this.metadata.classes.map(it => {
             const handler = injector.get<ClassHandler<T, any>>(it.metadataKey);
