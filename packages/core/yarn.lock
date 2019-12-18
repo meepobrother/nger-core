@@ -2,26 +2,19 @@
 # yarn lockfile v1
 
 
-"@nger/decorator@^1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@nger/decorator/-/decorator-1.1.6.tgz#0dbe8046b01174b43cbdb5df6c56ac74c0e49190"
-  integrity sha512-YHkZ/9ir3q9+gDQZGSrxbx8HLbfcaLalxx1Ayq6xNWl1GFXQOGVFeGmZ6VToH2GBw0Op5PS+uQldXe1uoi+ZlA==
+"@nger/decorator@^1.1.10", "@nger/decorator@^1.1.8":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@nger/decorator/-/decorator-1.1.10.tgz#9ee3624745dcb7ad27bad946954c74139742253c"
+  integrity sha512-iSAssCdylABHmtLMAGpXw6fUs9Cc2T+A7oPFqLJYCbnmio+RigY3zuTWuAJsNKNLeEs+fncbmLm58nqgPH1ApQ==
   dependencies:
     reflect-metadata "^0.1.13"
 
-"@nger/decorator@^1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@nger/decorator/-/decorator-1.1.7.tgz#99ef5a45bcb833af3e9061bd1aa1e16115aab899"
-  integrity sha512-jlqQVb3RcKapd//dNvaSTwbhCI2BAouh/PyI7ze+yMOP2PX24BwdnUnX535Iyt6wCks4Q1Vx/nSpUu5kiw/L4g==
+"@nger/di@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.4.4.tgz#47f9ea33929e49a473076cbbdeed9fa74fc1d590"
+  integrity sha512-TtT5/kO8XuJZJX3V8/BYIdCI4ozrT6e50T9wURA1Pg2agpTTpkaIQVZjZFuTBC+ZV2FxhDXcRbUJ9kkKrVg7gg==
   dependencies:
-    reflect-metadata "^0.1.13"
-
-"@nger/di@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.4.0.tgz#27c60cce824f90fab3cd58128c0bfbf908383f31"
-  integrity sha512-RhmDbuYtM1VR14jOmvOwSqVLcoiIlxUI+03HUtUs9TBlDWsK6zp/HBcYrDx/J2ZRcXQD4UhhJu9531Ldfe368w==
-  dependencies:
-    "@nger/decorator" "^1.1.6"
+    "@nger/decorator" "^1.1.8"
 
 reflect-metadata@^0.1.13:
   version "0.1.13"

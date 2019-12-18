@@ -26,7 +26,13 @@ export function getModuleProviders(moduleType: Type<any>): {
                     } else {
                         staticProviders.push(providerToStaticProvider(it.ngModule))
                         staticImports.push(it.ngModule)
-                        staticProviders.push(...it.providers.map(it => providerToStaticProvider(it)));
+                        staticProviders.push(...it.providers.map(it => {
+                            if (Array.isArray(it)) {
+                                return it.map(i => providerToStaticProvider(i))
+                            } else {
+                                return providerToStaticProvider(it)
+                            }
+                        }).flat());
                     }
                 })
             }
