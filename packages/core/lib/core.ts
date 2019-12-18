@@ -2,6 +2,7 @@ import { createPlatformFactory, PlatformRef, PLATFORM_INITIALIZER, CompilerFacto
 import { Injector, providerToStaticProvider } from '@nger/di';
 import { controllerProvider, injectableProvider } from './controller';
 import { DefaultErrorHandler } from './error_handler';
+import { ALLOW_MULTIPLE_PLATFORMS } from './createPlatform';
 
 export class CoreErrorHandler extends ErrorHandler {
     handleError(error: any, injector?: Injector): void {
@@ -14,6 +15,10 @@ export const corePlatform = createPlatformFactory(null, 'core', [
     {
         provide: ErrorHandler,
         useClass: DefaultErrorHandler
+    },
+    {
+        provide: ALLOW_MULTIPLE_PLATFORMS,
+        useValue: true
     },
     {
         provide: PlatformRef,

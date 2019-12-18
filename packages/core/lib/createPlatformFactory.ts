@@ -3,6 +3,7 @@ import { StaticProvider, InjectionToken, Injector } from '@nger/di';
 import { ALLOW_MULTIPLE_PLATFORMS, createPlatform, getPlatform } from './createPlatform';
 import { assertPlatform } from './assertPlatform';
 import { PlatformRef } from './platform_ref';
+export const AllPlatforms = new InjectionToken<string[]>(`CurrentPlatform`)
 export function createPlatformFactory(
     parentPlatformFactory: ((extraProviders?: StaticProvider[]) => PlatformRef) | null,
     name: string,
@@ -18,12 +19,14 @@ export function createPlatformFactory(
                 const allProviders = providers
                     .concat(extraProviders)
                     .concat({ provide: marker, useValue: true })
+                    .concat({ provide: AllPlatforms, useValue: desc, multi: true })
                 parentPlatformFactory(allProviders);
             } else {
                 const injectedProviders: StaticProvider[] =
                     providers
                         .concat(extraProviders)
-                        .concat({ provide: marker, useValue: true });
+                        .concat({ provide: marker, useValue: true })
+                        .concat({ provide: AllPlatforms, useValue: desc, multi: true });
                 createPlatform(Injector.create({ providers: injectedProviders, name: desc }));
             }
         }
