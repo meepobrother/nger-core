@@ -5,8 +5,7 @@ import {
     getINgerDecorator, INgerDecorator, Type,
     IClassDecorator, IMethodDecorator
 } from '@nger/decorator';
-import { MethodHandler, ParameterHandler, PropertyHandler, ClassHandler } from './handler';
-import { NgModuleRef } from "./types";
+import { MethodHandler, ParameterHandler, PropertyHandler, ControllerClassHandler } from './handler';
 export const controllerProvider: StaticProvider = {
     provide: ControllerMetadataKey,
     useValue: (factory: ControllerFactory<any>, decorator: IClassDecorator<any, ControllerOptions>) => {
@@ -46,12 +45,11 @@ export class ControllerFactory<T> {
     readonly metadata: INgerDecorator<T>;
     path: PathParams;
     readonly injector: Injector;
-    readonly imports: NgModuleRef<any>[];
     constructor(public readonly _type: Type<T>, injector: Injector) {
         this.injector = injector.create([], this._type.name);
         this.metadata = getINgerDecorator(_type);
         this.metadata.classes.map(it => {
-            const handler = injector.get<ClassHandler<T, any>>(it.metadataKey);
+            const handler = this.injector.get<ControllerClassHandler<T, any>>(it.metadataKey);
             if (handler) handler(this, it)
         });
     }

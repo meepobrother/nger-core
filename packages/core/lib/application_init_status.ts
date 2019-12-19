@@ -1,7 +1,7 @@
 
 import { isPromise } from './lang';
-import { InjectionToken, Optional, Inject, Injectable } from '@nger/di';
-export const APP_INITIALIZER = new InjectionToken<Array<() => void>>('Application Initializer');
+import { Optional, Inject, Injectable } from '@nger/di';
+import { APP_INITIALIZER } from './token';
 @Injectable()
 export class ApplicationInitStatus {
     // TODO(issue/24571): remove '!'.

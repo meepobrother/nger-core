@@ -1,4 +1,4 @@
-import { Injector, Type, StaticProvider, Provider, stringify, isTypeProvider, isClassProvider, isStaticClassProvider, isValueProvider, isFactoryProvider, isExistingProvider } from "@nger/di"
+import { Injector, Type, StaticProvider, Provider, stringify, isTypeProvider, isClassProvider, isStaticClassProvider, isValueProvider, isFactoryProvider, isExistingProvider, providerToStaticProvider } from "@nger/di"
 import { getModuleProviders } from "./getModuleProviders";
 import { isWithOnModuleInit } from './life_hooks';
 import { ControllerFactory } from "./controller";

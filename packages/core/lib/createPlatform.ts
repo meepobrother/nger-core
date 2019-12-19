@@ -1,11 +1,10 @@
-import { Injector, InjectionToken, InjectFlags } from '@nger/di'
+import { Injector, InjectFlags } from '@nger/di'
 import { PlatformRef } from './platform_ref';
-export const PLATFORM_INITIALIZER = new InjectionToken<Array<() => void>>('Platform Initializer');
+import { ALLOW_MULTIPLE_PLATFORMS, PLATFORM_INITIALIZER } from './token';
 let _platform: PlatformRef;
 export function getPlatform(): PlatformRef | null {
     return _platform && !_platform.destroyed ? _platform : null;
 }
-export const ALLOW_MULTIPLE_PLATFORMS = new InjectionToken<boolean>('AllowMultipleToken');
 export function createPlatform(injector: Injector): PlatformRef {
     if (_platform && !_platform.destroyed &&
         !_platform.injector.get(ALLOW_MULTIPLE_PLATFORMS, false)) {
@@ -13,6 +12,6 @@ export function createPlatform(injector: Injector): PlatformRef {
     }
     _platform = injector.get(PlatformRef);
     const inits = injector.get<Function[]>(PLATFORM_INITIALIZER, undefined, InjectFlags.Optional) || [];
-    if (inits) inits.forEach((init: any) => init());
+    if (inits) inits.map((init: any) => init())
     return _platform;
 }

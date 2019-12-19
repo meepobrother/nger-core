@@ -9,12 +9,17 @@
   dependencies:
     reflect-metadata "^0.1.13"
 
-"@nger/di@^1.4.6":
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.4.6.tgz#e51f6d0ebc1d69eff5eb37b1cc74f7cafc3e00d8"
-  integrity sha512-nSHGF8rKaJtlp1vcCB2nxiJdo6/Oz3uU6l5jH2ZjCN8NW475rkpuuv8g04DLWPicuq8iM+4bG9TubrCnryEg0g==
+"@nger/di@^1.5.5":
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.5.5.tgz#e55fca7648275e8fc595bfe20af68ff206dae1c6"
+  integrity sha512-VbrjhS+B9nPQ6nDmSU3xkCvJkTkiEYoYC9Imw3UHACLvJbMs2shwzMzGH25/HLZM2osyd14Pd7EZ8Uo76lDh/Q==
   dependencies:
     "@nger/decorator" "^1.1.12"
+
+http-status-codes@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/http-status-codes/-/http-status-codes-1.4.0.tgz#6e4c15d16ff3a9e2df03b89f3a55e1aae05fb477"
+  integrity sha512-JrT3ua+WgH8zBD3HEJYbeEgnuQaAnUeRRko/YojPAJjGmIfGD3KPU/asLdsLwKjfxOmQe5nXMQ0pt/7MyapVbQ==
 
 reflect-metadata@^0.1.13:
   version "0.1.13"

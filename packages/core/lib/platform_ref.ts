@@ -1,6 +1,6 @@
 import { Injector, Type, InjectFlags } from '@nger/di';
 import { compileNgModuleFactory } from './compilerFactory';
-import { NgModuleRef, NgModuleFactory } from './types';
+import { NgModuleRef, NgModuleFactory } from './ngModuleRef';
 import { ErrorHandler } from './error_handler';
 import { remove, optionsReducer } from './lang'
 import { ApplicationInitStatus } from './application_init_status'

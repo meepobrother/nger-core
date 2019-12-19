@@ -1,6 +1,6 @@
 import { Injector } from "@nger/di";
 import { Type } from '@nger/decorator';
-import { NgModuleFactory } from './types';
+import { NgModuleFactory } from './ngModuleRef';
 export interface CompilerOptions { }
 export class CompilerFactory {
     createCompiler(options?: CompilerOptions[]): Compiler {

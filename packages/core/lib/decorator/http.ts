@@ -1,4 +1,4 @@
-import { createMethodDecorator, createParameterDecorator, Type, IMethodDecorator, createDecorator, createClassDecorator } from '@nger/decorator';
+import { createMethodDecorator, createParameterDecorator, Type, IMethodDecorator, createDecorator, createClassDecorator, IParameterDecorator, IConstructorDecorator } from '@nger/decorator';
 
 /**
  * http methods
@@ -124,60 +124,109 @@ interface UploadedFiles { }
 export interface WithPipesOptions extends UsePipes {
     property: string;
 }
+
 export const UploadedFiles = createParameterDecorator<UploadedFiles>(UploadedFilesMetadataKey)
+
+export function isWithPipesOptions(val: any): val is WithPipesOptions {
+    return val && !!val.property
+}
+const withPipesOptionsHandler = (it: IParameterDecorator<any, WithPipesOptions | string> | IConstructorDecorator<any, WithPipesOptions | string>) => {
+    const options = it.options;
+    if (options) {
+        if (!isWithPipesOptions(options)) {
+            it.options = {
+                property: options
+            }
+        }
+    }
+}
 // http headers
 export const HeadersMetadataKey = `HeadersMetadataKey`
-export const Headers = createParameterDecorator<WithPipesOptions>(HeadersMetadataKey)
+export const Headers = createParameterDecorator<WithPipesOptions | string>(HeadersMetadataKey, withPipesOptionsHandler)
 // http query and graphql query
 export const QueryMetadataKey = `QueryMetadataKey`
-export const Query = createDecorator<WithPipesOptions>(QueryMetadataKey)
+export const Query = createDecorator<WithPipesOptions | string>(QueryMetadataKey, withPipesOptionsHandler)
 
 // http post body
 export const BodyMetadataKey = `BodyMetadataKey`
-export const Body = createParameterDecorator<WithPipesOptions>(BodyMetadataKey)
+export const Body = createParameterDecorator<WithPipesOptions | string>(BodyMetadataKey, withPipesOptionsHandler)
 
 // http path param
 export const ParamMetadataKey = `ParamMetadataKey`
-export const Param = createParameterDecorator<WithPipesOptions>(ParamMetadataKey)
+export const Param = createParameterDecorator<WithPipesOptions | string>(ParamMetadataKey, withPipesOptionsHandler)
 
 // grpc method
 export const GrpcMethodMetadataKey = `GrpcMethodMetadataKey`;
 export interface GrpcMethodOptions extends UseGuards {
     path?: string;
 }
-export const GrpcMethod = createMethodDecorator<GrpcMethodOptions>(GrpcMethodMetadataKey)
+export function isGrpcMethodOptions(val: any): val is GrpcMethodOptions {
+    return val && !!val.property
+}
+const grpcMethodOptionsHandler = (it: IMethodDecorator<any, GrpcMethodOptions | string>) => {
+    const options = it.options;
+    if (options) {
+        if (!isGrpcMethodOptions(options)) {
+            it.options = {
+                path: options
+            }
+        }
+    } else {
+        it.options = {
+            path: it.property as string
+        }
+    }
+}
+export const GrpcMethod = createMethodDecorator<GrpcMethodOptions | string>(GrpcMethodMetadataKey, grpcMethodOptionsHandler)
 // grpc stream
-export const GrpcStreamMethodMetadataKey = `GrpcStreamMethodMetadataKey`;
-export interface GrpcStreamMethodOptions extends UseGuards {
+export const MethodStreamMetadataKey = `MethodStreamMetadataKey`;
+export interface MethodStreamOptions extends UseGuards {
     path?: string;
 }
-export const GrpcStreamMethod = createMethodDecorator<GrpcStreamMethodOptions>(GrpcStreamMethodMetadataKey)
+export const MethodStream = createMethodDecorator<MethodStreamOptions | string>(MethodStreamMetadataKey, grpcMethodOptionsHandler)
+
+export const StreamMethodMetadataKey = `StreamMethodMetadataKey`;
+export interface StreamMethodOptions extends UseGuards {
+    path?: string;
+}
+export const StreamMethod = createMethodDecorator<StreamMethodOptions | string>(StreamMethodMetadataKey, grpcMethodOptionsHandler)
+
+export const DuplexMethodMetadataKey = `DuplexMethodMetadataKey`;
+export interface DuplexMethodOptions extends UseGuards {
+    path?: string;
+}
+export const DuplexMethod = createMethodDecorator<DuplexMethodOptions | string>(DuplexMethodMetadataKey, grpcMethodOptionsHandler)
 
 // graphql mutation
 export const MutationMetadataKey = `MutationMetadataKey`;
 export interface MutationOptions extends UseGuards {
     path?: string;
 }
-export const Mutation = createMethodDecorator<MutationOptions>(MutationMetadataKey)
+export const Mutation = createMethodDecorator<MutationOptions | string>(MutationMetadataKey, grpcMethodOptionsHandler)
 // graphql subscription
 export const SubscriptionMetadataKey = `SubscriptionMetadataKey`;
 export interface SubscriptionOptions extends UseGuards {
     path?: string;
 }
-export const Subscription = createMethodDecorator<SubscriptionOptions>(SubscriptionMetadataKey)
-
+export const Subscription = createMethodDecorator<SubscriptionOptions | string>(SubscriptionMetadataKey, grpcMethodOptionsHandler)
 /**
- * 过滤info
+ * graphql resolver
  */
-export const InfoMetadataKey = `InfoMetadataKey`;
-export interface InfoOptions extends UsePipes { }
-export const Info = createParameterDecorator<InfoOptions>(InfoMetadataKey)
-
-/**
- * resolver
- */
-export const ResolverMetadataKey = `ResolverMetadataKey`
+export const ResolverMetadataKey = `ResolverMetadataKey`;
 export interface ResolverOptions extends UseGuards {
     path?: string;
 }
-export const Resolver = createClassDecorator<ResolverOptions>(ResolverMetadataKey)
+export const Resolver = createClassDecorator<ResolverOptions>(ResolverMetadataKey);
+
+// graphql info
+export const InfoMetadataKey = `InfoMetadataKey`
+export interface InfoOptions extends UseGuards { }
+export const Info = createClassDecorator<InfoOptions>(InfoMetadataKey)
+// graphql source
+export const SourceMetadataKey = `SourceMetadataKey`
+export interface SourceOptions { }
+export const Source = createClassDecorator<SourceOptions>(SourceMetadataKey)
+// graphql context
+export const ContextMetadataKey = `ContextMetadataKey`
+export interface ContextOptions { }
+export const Context = createClassDecorator<ContextOptions>(ContextMetadataKey)
