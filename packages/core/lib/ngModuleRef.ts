@@ -26,7 +26,7 @@ export class NgModuleRef<T> {
         /**
          * 获取依赖项目
          */
-        const moduleDef = getModuleProviders(_type);
+        const moduleDef = getModuleProviders(_type, injector);
         /**
          * provider
          */

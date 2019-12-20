@@ -1,6 +1,7 @@
-import { InjectionToken } from "@nger/di"
+import { InjectionToken, Type } from "@nger/di"
 import { LogLevel } from "./logger"
 import { INext, IResponse, IRequest, IRouter } from "./adapters"
+import { INgerDecorator } from "@nger/decorator"
 export const APP_ID = new InjectionToken<string>(`@nger/core APP_ID`)
 export const REQUEST = new InjectionToken<IRequest>(`@nger/core REQUEST`)
 export const RESPONSE = new InjectionToken<IResponse>(`@nger/core RESPONSE`)
@@ -19,3 +20,7 @@ export const PLATFORM_INITIALIZER = new InjectionToken<Array<() => void>>('Platf
 export const ALLOW_MULTIPLE_PLATFORMS = new InjectionToken<boolean>('AllowMultipleToken');
 export const PLATFORM_ID = new InjectionToken<string>(`PLATFORM_ID`)
 export const LOGGER_LEVEL = new InjectionToken<LogLevel[]>(`LOGGER_LEVEL`);
+interface GetIngerDecorator<T = any, O = any> {
+    (type: Type<T>): INgerDecorator<T, O>
+}
+export const GET_INGER_DECORATOR = new InjectionToken<GetIngerDecorator>(`GET_INGER_DECORATOR`)

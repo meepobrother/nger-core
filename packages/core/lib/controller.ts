@@ -6,6 +6,7 @@ import {
     IClassDecorator, IMethodDecorator
 } from '@nger/decorator';
 import { MethodHandler, ParameterHandler, PropertyHandler, ControllerClassHandler } from './handler';
+import { GET_INGER_DECORATOR } from "./token";
 export const controllerProvider: StaticProvider = {
     provide: ControllerMetadataKey,
     useValue: (factory: ControllerFactory<any>, decorator: IClassDecorator<any, ControllerOptions>) => {
@@ -52,6 +53,7 @@ export class ControllerFactory<T> {
     readonly injector: Injector;
     constructor(public readonly _type: Type<T>, injector: Injector) {
         this.injector = injector.create([], this._type.name);
+        const getINgerDecorator = this.injector.get(GET_INGER_DECORATOR)
         this.metadata = getINgerDecorator(_type);
         this.metadata.classes.map(it => {
             const handler = this.injector.get<ControllerClassHandler<T, any>>(it.metadataKey);
