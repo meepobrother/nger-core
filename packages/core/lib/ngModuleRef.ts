@@ -62,7 +62,8 @@ export class NgModuleRef<T> {
             this.injector.setStatic([{
                 provide: ctrl.provide,
                 useFactory: () => controllerFactory.create(),
-                deps: []
+                deps: [],
+                noCache: true
             }]);
             return controllerFactory;
         });

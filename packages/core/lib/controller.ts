@@ -1,4 +1,4 @@
-import { Injector, InjectFlags, providerToStaticProvider, StaticProvider, InjectableMetadataKey, InjectableOptions } from "@nger/di";
+import { Injector, InjectFlags, providerToStaticProvider, StaticProvider, InjectableMetadataKey, InjectableOptions, isStaticClassProvider, isConstructorProvider, isFactoryProvider } from "@nger/di";
 import { ControllerOptions, ControllerMetadataKey } from './decorator';
 import { PathParams } from './decorator/types';
 import {
@@ -17,7 +17,12 @@ export const controllerProvider: StaticProvider = {
                     return it.map(i => providerToStaticProvider(i))
                 }
                 return providerToStaticProvider(it)
-            }).flat();
+            }).flat().map(it => {
+                if (isStaticClassProvider(it) || isFactoryProvider(it) || isConstructorProvider(it)) {
+                    it.noCache = true;
+                }
+                return it;
+            });
             factory.injector.setStatic(staticProviders)
         }
     }

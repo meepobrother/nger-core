@@ -20,3 +20,4 @@ export * from './logger';
 export * from './guard';
 export * from './config';
 export * from './adapters';
+export * from './cache';

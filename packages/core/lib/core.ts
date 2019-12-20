@@ -1,9 +1,11 @@
-import { createPlatformFactory, PlatformRef, PLATFORM_INITIALIZER, CompilerFactory, ErrorHandler, ApplicationInitStatus, APP_INITIALIZER } from '../lib';
 import { Injector, providerToStaticProvider } from '@nger/di';
 import { controllerProvider, injectableProvider } from './controller';
-import { DefaultErrorHandler } from './error_handler';
-import { ALLOW_MULTIPLE_PLATFORMS } from './token';
-
+import { DefaultErrorHandler, ErrorHandler } from './error_handler';
+import { ALLOW_MULTIPLE_PLATFORMS, APP_INITIALIZER, PLATFORM_INITIALIZER } from './token';
+import { CompilerFactory } from './compilerFactory'
+import { ApplicationInitStatus } from './application_init_status'
+import { PlatformRef } from './platform_ref'
+import { createPlatformFactory } from './createPlatformFactory'
 export class CoreErrorHandler extends ErrorHandler {
     handleError(error: any, injector?: Injector): void {
         throw error;
