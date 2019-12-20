@@ -2,7 +2,7 @@ import { Injector, InjectFlags, providerToStaticProvider, StaticProvider, Inject
 import { ControllerOptions, ControllerMetadataKey } from './decorator';
 import { PathParams } from './decorator/types';
 import {
-    getINgerDecorator, INgerDecorator, Type,
+    INgerDecorator, Type,
     IClassDecorator, IMethodDecorator
 } from '@nger/decorator';
 import { MethodHandler, ParameterHandler, PropertyHandler, ControllerClassHandler } from './handler';
@@ -53,8 +53,8 @@ export class ControllerFactory<T> {
     readonly injector: Injector;
     constructor(public readonly _type: Type<T>, injector: Injector) {
         this.injector = injector.create([], this._type.name);
-        const getINgerDecorator = this.injector.get(GET_INGER_DECORATOR)
-        this.metadata = getINgerDecorator(_type);
+        const getDecorator = this.injector.get(GET_INGER_DECORATOR)
+        this.metadata = getDecorator(_type);
         this.metadata.classes.map(it => {
             const handler = this.injector.get<ControllerClassHandler<T, any>>(it.metadataKey);
             if (handler) handler(this, it)

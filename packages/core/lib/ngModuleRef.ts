@@ -30,14 +30,20 @@ export class NgModuleRef<T> {
         /**
          * provider
          */
-        this.injector = injector.create([
-            {
-                provide: NgModuleRef,
-                useValue: this
-            },
-            ...moduleDef.providers,
-            ...moduleDef.controllers,
-        ], moduleDef.id || _type.name);
+        this.injector = injector.create([{
+            provide: NgModuleRef,
+            useValue: this
+        }], moduleDef.id || _type.name);
+        moduleDef.providers.map(ctrl => {
+            const controllerFactory = new ControllerFactory(getStaticProvider(ctrl, this.injector), this.injector);
+            this.injector.setStatic([{
+                provide: ctrl.provide,
+                useFactory: () => controllerFactory.create(),
+                deps: [],
+                noCache: false
+            }]);
+            return controllerFactory;
+        });
         /**
          * imports
          */

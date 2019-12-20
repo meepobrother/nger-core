@@ -1,6 +1,6 @@
 import { Type, StaticProvider, isTypeProvider, providerToStaticProvider, stringify, Injector, InjectionToken } from '@nger/di';
 import { ModuleMetadataKey, ModuleOptions } from './decorator';
-import { getINgerDecorator, IClassDecorator } from '@nger/decorator';
+import { IClassDecorator } from '@nger/decorator';
 import { GET_INGER_DECORATOR } from './token'
 export function getModuleProviders(moduleType: Type<any>, injector: Injector): {
     providers: StaticProvider[],
@@ -12,8 +12,8 @@ export function getModuleProviders(moduleType: Type<any>, injector: Injector): {
 } {
     const staticProviders: StaticProvider[] = [];
     const staticImports: any[] = [];
-    const getINgerDecorator = injector.get(GET_INGER_DECORATOR)
-    const nger = getINgerDecorator(moduleType);
+    const getDecorator = injector.get(GET_INGER_DECORATOR)
+    const nger = getDecorator(moduleType);
     staticProviders.push(providerToStaticProvider(moduleType));
     const mdouleMetadata = nger.classes.find(it => it.metadataKey === ModuleMetadataKey) as IClassDecorator<any, ModuleOptions>;
     if (mdouleMetadata) {
