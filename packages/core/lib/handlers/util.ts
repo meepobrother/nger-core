@@ -12,11 +12,10 @@ export function compileAny<M, I>(
     init: I,
     injector: Injector,
     moduleType: Type<M>
-): I {
+): I | undefined {
     const nger = getNger(injector, moduleType)
     const ngModuleRef = anyReduce<M, any, I>(nger.classes, injector, init)
     if (ngModuleRef) return ngModuleRef;
-    throw new Error(`Compile Ng ModuleRef Error`)
 }
 export function getNger(injector: Injector, type: Type<any>) {
     const getDecorator = injector.get(GET_INGER_DECORATOR);

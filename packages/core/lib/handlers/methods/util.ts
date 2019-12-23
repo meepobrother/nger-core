@@ -1,5 +1,5 @@
 import { Injector } from "@nger/di";
-import { ROUTES } from "../../token";
+import { ROUTES, REQUEST } from "../../token";
 import { IMethodDecorator } from "@nger/decorator";
 import { isCanLoad } from "../../guard";
 import { GuardError } from "./error";
@@ -8,11 +8,12 @@ export function createHandler(injector: Injector, item: IMethodDecorator, path: 
     return (method: string) => {
         const options = item.options;
         if (options) {
-            injector.setStatic([{
+            const platformInjector = injector.getInjector('platform');
+            platformInjector.setStatic([{
                 provide: ROUTES,
                 useFactory: () => {
                     const instance = injector.get(item.type);
-                    const method = Reflect.get(instance, item.property);
+                    const methodHandler = Reflect.get(instance, item.property);
                     return {
                         method: method,
                         path: `${path}${options.path}`,
@@ -23,12 +24,15 @@ export function createHandler(injector: Injector, item: IMethodDecorator, path: 
                                 }
                                 return true;
                             });
-                            if (pass) return method();
-                            throw new GuardError()
+                            // const req = injector.get(REQUEST);
+                            if (pass) return methodHandler();
+                            throw new GuardError();
                         }
                     }
                 },
-                deps: []
+                deps: [],
+                multi: true,
+                noCache: true
             }])
         }
     }

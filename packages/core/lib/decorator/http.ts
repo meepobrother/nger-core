@@ -9,11 +9,16 @@ interface HttpMethodOptions {
     useGuards?: Type<any>[];
 }
 export function isHttpMethodOptions(val: any): val is HttpMethodOptions {
-    return val && !!val.path
+    return val && typeof val.path === 'string'
 }
 export const GetMetadataKey = `GetMetadataKey`
 export interface GetOptions extends HttpMethodOptions { }
 export const Get = createMethodDecorator<GetOptions | string>(GetMetadataKey, (it: IMethodDecorator<any, GetOptions | string>) => {
+    if (typeof it.options === 'string') {
+        it.options = {
+            path: it.options
+        }
+    }
     if (it.options && !isHttpMethodOptions(it.options)) {
         it.options = {
             path: it.options
@@ -23,6 +28,11 @@ export const Get = createMethodDecorator<GetOptions | string>(GetMetadataKey, (i
 export const PostMetadataKey = `PostMetadataKey`
 export interface PostOptions extends HttpMethodOptions { }
 export const Post = createMethodDecorator<PostOptions | string>(PostMetadataKey, (it: IMethodDecorator<any, PostOptions | string>) => {
+    if (typeof it.options === 'string') {
+        it.options = {
+            path: it.options
+        }
+    }
     if (it.options && !isHttpMethodOptions(it.options)) {
         it.options = {
             path: it.options
@@ -32,6 +42,11 @@ export const Post = createMethodDecorator<PostOptions | string>(PostMetadataKey,
 export const AllMetadataKey = `AllMetadataKey`
 export interface AllOptions extends HttpMethodOptions { }
 export const All = createMethodDecorator<AllOptions | string>(AllMetadataKey, (it: IMethodDecorator<any, AllOptions | string>) => {
+    if (typeof it.options === 'string') {
+        it.options = {
+            path: it.options
+        }
+    }
     if (it.options && !isHttpMethodOptions(it.options)) {
         it.options = {
             path: it.options
@@ -41,6 +56,11 @@ export const All = createMethodDecorator<AllOptions | string>(AllMetadataKey, (i
 export const DeleteMetadataKey = `DeleteMetadataKey`
 export interface DeleteOptions extends HttpMethodOptions { }
 export const Delete = createMethodDecorator<DeleteOptions | string>(DeleteMetadataKey, (it: IMethodDecorator<any, DeleteOptions | string>) => {
+    if (typeof it.options === 'string') {
+        it.options = {
+            path: it.options
+        }
+    }
     if (it.options && !isHttpMethodOptions(it.options)) {
         it.options = {
             path: it.options
@@ -50,6 +70,11 @@ export const Delete = createMethodDecorator<DeleteOptions | string>(DeleteMetada
 export const PatchMetadataKey = `PatchMetadataKey`
 export interface PatchOptions extends HttpMethodOptions { }
 export const Patch = createMethodDecorator<PatchOptions | string>(PatchMetadataKey, (it: IMethodDecorator<any, PatchOptions | string>) => {
+    if (typeof it.options === 'string') {
+        it.options = {
+            path: it.options
+        }
+    }
     if (it.options && !isHttpMethodOptions(it.options)) {
         it.options = {
             path: it.options
@@ -59,6 +84,11 @@ export const Patch = createMethodDecorator<PatchOptions | string>(PatchMetadataK
 export const OptionsMetadataKey = `OptionsMetadataKey`
 export interface OptionsOptions extends HttpMethodOptions { }
 export const Options = createMethodDecorator<OptionsOptions | string>(OptionsMetadataKey, (it: IMethodDecorator<any, OptionsOptions | string>) => {
+    if (typeof it.options === 'string') {
+        it.options = {
+            path: it.options
+        }
+    }
     if (it.options && !isHttpMethodOptions(it.options)) {
         it.options = {
             path: it.options
@@ -68,6 +98,11 @@ export const Options = createMethodDecorator<OptionsOptions | string>(OptionsMet
 export const HeadMetadataKey = `HeadMetadataKey`
 export interface HeadOptions extends HttpMethodOptions { }
 export const Head = createMethodDecorator<HeadOptions | string>(HeadMetadataKey, (it: IMethodDecorator<any, HeadOptions | string>) => {
+    if (typeof it.options === 'string') {
+        it.options = {
+            path: it.options
+        }
+    }
     if (it.options && !isHttpMethodOptions(it.options)) {
         it.options = {
             path: it.options
@@ -160,6 +195,9 @@ export const Body = createParameterDecorator<WithPipesOptions | string>(BodyMeta
 // http path param
 export const ParamMetadataKey = `ParamMetadataKey`
 export const Param = createParameterDecorator<WithPipesOptions | string>(ParamMetadataKey, withPipesOptionsHandler)
+// args
+export const ArgsMetadataKey = `ParamMetadataKey`
+export const Args = createParameterDecorator<WithPipesOptions | string>(ArgsMetadataKey, withPipesOptionsHandler)
 
 // grpc method
 export const GrpcMethodMetadataKey = `GrpcMethodMetadataKey`;

@@ -5,7 +5,7 @@ import { prividersToStatic, getNger } from "./util";
 export interface HttpMethodHandler {
     (injector: Injector, item: IMethodDecorator<any, any>, parent: IClassDecorator<any, ControllerOptions>, path: string): any;
 }
-const handler = (init: any, injector: Injector, ctrl: IClassDecorator<any, ControllerOptions>) => {
+const handler = (init: any, ctrl: IClassDecorator<any, ControllerOptions>, injector: Injector) => {
     const controllerInjector = injector.create([], ctrl.type.name);
     const options = ctrl.options;
     if (options) {

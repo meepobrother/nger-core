@@ -1,6 +1,6 @@
 import { InjectionToken } from "@nger/di";
 import { LogLevel } from "./logger";
-import { INext, HttpRequest, HttpResponse } from "./http";
+import { HttpRequest, HttpResponse } from "./http";
 /**
  * app id
  */
@@ -13,10 +13,6 @@ export const REQUEST = new InjectionToken<HttpRequest<any>>(`@nger/core REQUEST`
  * 响应
  */
 export const RESPONSE = new InjectionToken<HttpResponse<any>>(`@nger/core RESPONSE`);
-/**
- * 下一个
- */
-export const NEXT = new InjectionToken<INext>(`@nger/core NEXT`);
 /**
  * 结果处理钩子
  */

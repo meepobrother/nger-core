@@ -1,5 +1,5 @@
 
-import { StaticProvider, InjectionToken, INJECTOR_SCOPE, rootInjector } from '@nger/di';
+import { StaticProvider, InjectionToken, INJECTOR_SCOPE, topInjector } from '@nger/di';
 import { createPlatform, getPlatform } from './createPlatform';
 import { assertPlatform } from './assertPlatform';
 import { PlatformRef } from './platform_ref';
@@ -37,7 +37,7 @@ export function createPlatformFactory(
                             provide: PLATFORM_ID,
                             useValue: name
                         });
-                createPlatform(rootInjector.create(injectedProviders, desc));
+                createPlatform(topInjector.create(injectedProviders, desc));
             }
         }
         return assertPlatform(MASK);

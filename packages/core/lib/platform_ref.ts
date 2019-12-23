@@ -1,4 +1,4 @@
-import { Injector, Type, InjectFlags } from '@nger/di';
+import { Injector, Type, InjectFlags, INJECTOR_SCOPE } from '@nger/di';
 import { NgModuleRef } from './ngModuleRef';
 import { remove } from './lang'
 import { ApplicationInitStatus } from './application_init_status'
@@ -20,6 +20,10 @@ export class PlatformRef {
     ): Promise<NgModuleRef<M>> {
         // todo 注入启动参数
         const moduleRef = compileNgModuleRef(this.injector, moduleType);
+        moduleRef.injector.setStatic([{
+            provide: INJECTOR_SCOPE,
+            useValue: 'root'
+        }])
         moduleRef.onDestroy(() => remove(this._modules, moduleRef));
         const initStatus: ApplicationInitStatus = moduleRef.injector.get(ApplicationInitStatus, null, InjectFlags.Optional);
         if (initStatus) await initStatus.runInitializers();
