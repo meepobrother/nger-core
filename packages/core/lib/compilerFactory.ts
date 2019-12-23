@@ -1,24 +1,28 @@
-import { Injector } from "@nger/di";
-import { Type } from '@nger/decorator';
-import { NgModuleFactory } from './ngModuleRef';
-export interface CompilerOptions { }
-export class CompilerFactory {
-    createCompiler(options?: CompilerOptions[]): Compiler {
-        return new Compiler(options);
-    }
-}
-export class Compiler {
-    constructor(public options?: CompilerOptions[]) { }
-    async compileModuleAsync<M>(moduleType: Type<M>): Promise<NgModuleFactory<M>> {
-        return new NgModuleFactory(moduleType)
-    }
-}
-export function compileNgModuleFactory<M>(
+import { Injector, InjectFlags, GET_INGER_DECORATOR } from "@nger/di";
+import { Type, IClassDecorator } from '@nger/decorator';
+import { NgModuleRef } from './ngModuleRef';
+import { ModuleMetadataKey } from "./decorator";
+
+export function compileNgModuleRef<M>(
     injector: Injector,
-    options: CompilerOptions,
     moduleType: Type<M>
-): Promise<NgModuleFactory<M>> {
-    const compilerFactory = injector.get(CompilerFactory) as CompilerFactory;
-    const compiler = compilerFactory.createCompiler([options]);
-    return compiler.compileModuleAsync(moduleType);
+): NgModuleRef<M> {
+    const init = new NgModuleRef<M>(injector, moduleType)
+    const getDecorator = injector.get(GET_INGER_DECORATOR);
+    const nger = getDecorator(moduleType)
+    const ngModuleRef = moduleReduce<M, any>(nger.classes, init)
+    if (ngModuleRef) return ngModuleRef;
+    throw new Error(`Compile Ng ModuleRef Error`)
+}
+export interface ModuleReduceHandler<T, O> {
+    (old: NgModuleRef<T>, current: IClassDecorator<T, O>): NgModuleRef<T>;
+}
+export function moduleReduce<T, O>(arrs: IClassDecorator<T, O>[], init: NgModuleRef<T>): NgModuleRef<T> {
+    return arrs.reduce<NgModuleRef<T>>((prev: NgModuleRef<T>, current: IClassDecorator<T, O>) => {
+        if (current.metadataKey) {
+            const handler = init.injector.get<ModuleReduceHandler<T, O>>(current.metadataKey, null, InjectFlags.Optional);
+            if (handler) return handler(init, current);
+        }
+        throw new Error(`hander ${ModuleMetadataKey} error`)
+    }, init)
 }

@@ -11,7 +11,6 @@ export function remove<T>(list: T[], el: T): void {
         list.splice(index, 1);
     }
 }
-
 export function optionsReducer<T extends Object>(dst: any, objs: T | T[]): T {
     if (Array.isArray(objs)) {
         dst = objs.reduce(optionsReducer, dst);

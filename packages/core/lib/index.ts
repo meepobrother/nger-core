@@ -14,10 +14,10 @@ export * from './ngModuleRef';
 export * from './controller';
 export * from './decorator';
 export * from './token';
-export * from './handler';
 export * from './pipeTransform';
 export * from './logger';
 export * from './guard';
 export * from './config';
-export * from './adapters';
+// export * from './adapters';
 export * from './cache';
+export * from './http/index'

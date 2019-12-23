@@ -11,7 +11,7 @@ export function createPlatform(injector: Injector): PlatformRef {
         throw new Error('There can be only one platform. Destroy the previous one to create a new one.');
     }
     _platform = injector.get(PlatformRef);
-    const inits = injector.get<Function[]>(PLATFORM_INITIALIZER, undefined, InjectFlags.Optional) || [];
+    const inits = (injector.get<Function[]>(PLATFORM_INITIALIZER, [], InjectFlags.Optional) || []).flat();
     if (inits) inits.map((init: any) => init())
     return _platform;
 }

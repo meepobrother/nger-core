@@ -12,6 +12,9 @@ export class DemoController {
     imports: [],
     providers: [
         DemoController
+    ],
+    exports: [
+        DemoController
     ]
 })
 export class Demo2Module {
@@ -36,21 +39,22 @@ export class Demo2Module {
 }
 @Module({
     imports: [Demo2Module.forFeature(`demo3`)],
-    providers: [],
-    exports: [
-        Demo2Module
-    ]
+    providers: []
 })
 export class Demo3Module { }
 
 
 @Module({
-    imports: [Demo3Module],
+    imports: [Demo2Module.forRoot(`demo`), Demo3Module],
     providers: []
 })
 export class DemoModule { }
 corePlatform().bootstrapModule(DemoModule).then(res => {
-    debugger;
     const controller = (res as any).get(DemoController)
+    const demo3 = (res as any).getModuleRef(Demo3Module)
+    const demo2 = (res as any).getModuleRef(Demo2Module)
+    const demo3_demo2 = (res as any).getModuleRef(Demo3Module, Demo2Module)
+    const server = demo3_demo2.get(DemoController)
+    server.add();
     debugger;
 })

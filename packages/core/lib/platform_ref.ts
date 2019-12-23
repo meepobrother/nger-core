@@ -1,9 +1,8 @@
 import { Injector, Type, InjectFlags } from '@nger/di';
-import { compileNgModuleFactory } from './compilerFactory';
-import { NgModuleRef, NgModuleFactory } from './ngModuleRef';
-import { ErrorHandler } from './error_handler';
-import { remove, optionsReducer } from './lang'
+import { NgModuleRef } from './ngModuleRef';
+import { remove } from './lang'
 import { ApplicationInitStatus } from './application_init_status'
+import { compileNgModuleRef } from './compilerFactory';
 export abstract class NgModuleBootstrap {
     abstract run<T>(moduleRef: NgModuleRef<T>): Promise<any>;
 }
@@ -17,31 +16,10 @@ export class PlatformRef {
     constructor(private _injector: Injector) { }
 
     async bootstrapModule<M>(
-        moduleType: Type<M>,
-        compilerOptions: BootstrapOptions = {}
-    ): Promise<NgModuleRef<M>> {
-        const options = optionsReducer({}, compilerOptions);
-        // 注册injector
-        return compileNgModuleFactory<M>(this.injector, options, moduleType)
-            .then(moduleFactory => this.bootstrapModuleFactory(moduleFactory));
-    }
-
-    async bootstrapModuleFactory<M>(
-        moduleFactory: NgModuleFactory<M>
+        moduleType: Type<M>
     ): Promise<NgModuleRef<M>> {
         // todo 注入启动参数
-        const moduleRef = await moduleFactory.create(this.injector);
-        this.injector.setStatic([{
-            provide: NgModuleFactory,
-            useValue: moduleFactory
-        }, {
-            provide: NgModuleRef,
-            useValue: moduleRef
-        }]);
-        const exceptionHandler = moduleRef.injector.get(ErrorHandler, null) as ErrorHandler;
-        if (!exceptionHandler) {
-            throw new Error('No ErrorHandler. Please Regist ErrorHandler');
-        }
+        const moduleRef = compileNgModuleRef(this.injector, moduleType);
         moduleRef.onDestroy(() => remove(this._modules, moduleRef));
         const initStatus: ApplicationInitStatus = moduleRef.injector.get(ApplicationInitStatus, null, InjectFlags.Optional);
         if (initStatus) await initStatus.runInitializers();

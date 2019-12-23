@@ -1,78 +1,32 @@
-import { Injector, Type, StaticProvider, Provider, stringify, isTypeProvider, isClassProvider, isStaticClassProvider, isValueProvider, isFactoryProvider, isExistingProvider, providerToStaticProvider } from "@nger/di"
-import { getModuleProviders } from "./getModuleProviders";
+import { Injector, Type, InjectFlags, IToken } from "@nger/di"
 import { isWithOnModuleInit } from './life_hooks';
-import { ControllerFactory } from "./controller";
-export class NgModuleFactory<T> {
-    moduleType: Type<T>;
-    constructor(moduleType: Type<T>) {
-        this.moduleType = moduleType;
-    }
-    create(parentInjector: Injector): NgModuleRef<T> {
-        return new NgModuleRef<T>(parentInjector, this.moduleType);
-    }
-}
 export class NgModuleRef<T> {
     private _destroyListeners: Function[] = [];
     private _destroyed: boolean = false;
     injector: Injector;
     get instance(): T {
-        return this.injector.get(this._type)
+        return this.injector.get(this.type)
+    }
+    get type(): Type<T> {
+        return this._type;
     }
     imports: NgModuleRef<any>[] = [];
-    exports: StaticProvider[] = [];
-    providers: StaticProvider[] = [];
-    controllers: ControllerFactory<any>[] = [];
+    exports: any[] = [];
     constructor(injector: Injector, private _type: Type<T>) {
-        /**
-         * 获取依赖项目
-         */
-        const moduleDef = getModuleProviders(_type, injector);
-        /**
-         * provider
-         */
-        this.injector = injector.create([{
-            provide: NgModuleRef,
-            useValue: this
-        }], moduleDef.id || _type.name);
-        moduleDef.providers.map(ctrl => {
-            const controllerFactory = new ControllerFactory(getStaticProvider(ctrl, this.injector), this.injector);
-            this.injector.setStatic([{
-                provide: ctrl.provide,
-                useFactory: () => controllerFactory.create(),
-                deps: [],
-                noCache: false
-            }]);
-            return controllerFactory;
-        });
-        /**
-         * imports
-         */
-        const imports = moduleDef.imports.map(imp => new NgModuleFactory(imp)).map(fac => fac.create(this.injector));
-        /**
-         * imports
-         */
-        this.imports = imports;
-        /**
-         * exports
-         */
-        this.exports = moduleDef.exports;
-        /**
-         * exports
-         */
-        this.injector.setStatic(this.imports.map(child => child.getAllExports()).flat())
-        /**
-         * controller
-         */
-        this.controllers = moduleDef.controllers.map(ctrl => {
-            const controllerFactory = new ControllerFactory(getStaticProvider(ctrl, this.injector), this.injector);
-            this.injector.setStatic([{
-                provide: ctrl.provide,
-                useFactory: () => controllerFactory.create(),
-                deps: [],
-                noCache: true
-            }]);
-            return controllerFactory;
-        });
+        this.injector = injector;
+    }
+    getModuleRef<T>(type: Type<any>, ...children: Type<any>[]): NgModuleRef<any> | undefined {
+        let res: NgModuleRef<any> | undefined;
+        res = this.imports.find(it => it.type === type)
+        if (children.length > 0) {
+            children.map(child => {
+                if (res) res = res.getModuleRef(child)
+            })
+        }
+        return res;
+    }
+    get<T>(token: IToken<T>, notFoundValue?: T | undefined | null, flags?: InjectFlags) {
+        return this.injector.get(token, notFoundValue, flags)
     }
     destroy(): void {
         if (this._destroyed) {
@@ -85,19 +39,6 @@ export class NgModuleRef<T> {
     onDestroy(callback: () => void): void {
         this._destroyListeners.push(callback)
     }
-    getAllModuleRef(): NgModuleRef<any>[] {
-        const refs: NgModuleRef<any>[] = [];
-        refs.push(this);
-        const children = this.imports.map(imp => imp.getAllModuleRef()).flat();
-        refs.push(...children);
-        return refs;
-    }
-    getAllControllers(): ControllerFactory<any>[] {
-        return this.getAllModuleRef().map(ref => ref.controllers).flat()
-    }
-    getAllExports() {
-        return this.getAllModuleRef().map(ref => ref.exports).flat()
-    }
     async onInit() {
         await Promise.all(this.imports.map(async imp => await imp.onInit()))
         if (isWithOnModuleInit(this.instance)) {
@@ -105,35 +46,4 @@ export class NgModuleRef<T> {
         }
         return this;
     }
-}
-
-export function getStaticProvider<T = any>(provider: StaticProvider, injector: Injector): Type<T> {
-    let instance: any;
-    if (isTypeProvider(provider)) {
-        return provider;
-    }
-    else if (isClassProvider(provider)) {
-        return provider.useClass
-    }
-    else if (isStaticClassProvider(provider)) {
-        return provider.useClass
-    }
-    else if (isValueProvider(provider)) {
-        instance = provider.useValue;
-    }
-    else if (isFactoryProvider(provider)) {
-        instance = injector.get<any>(provider.provide);
-    }
-    else if (isExistingProvider(provider)) {
-        instance = injector.get<any>(provider.provide);
-    } else {
-        instance = injector.get<any>(provider.provide);
-    }
-    if (instance) {
-        const obj = Reflect.getPrototypeOf(instance);
-        if (obj) {
-            return Reflect.get(obj, 'constructor')
-        }
-    }
-    throw new Error(`can not found Constructor type`)
 }

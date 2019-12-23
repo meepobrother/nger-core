@@ -1,7 +1,8 @@
 import {
     Injector, InjectFlags, providerToStaticProvider, StaticProvider,
     InjectableMetadataKey, InjectableOptions, isStaticClassProvider,
-    isConstructorProvider, isFactoryProvider
+    isConstructorProvider, isFactoryProvider, MethodHandler, ParameterHandler, PropertyHandler,
+    GET_INGER_DECORATOR
 } from "@nger/di";
 import { ControllerOptions, ControllerMetadataKey } from './decorator';
 import { PathParams } from './decorator/types';
@@ -9,8 +10,7 @@ import {
     INgerDecorator, Type,
     IClassDecorator, IMethodDecorator
 } from '@nger/decorator';
-import { MethodHandler, ParameterHandler, PropertyHandler, ControllerClassHandler } from './handler';
-import { GET_INGER_DECORATOR } from "./token";
+import { ControllerClassHandler } from './handler';
 export const controllerProvider: StaticProvider = {
     provide: ControllerMetadataKey,
     useValue: (factory: ControllerFactory<any>, decorator: IClassDecorator<any, ControllerOptions>) => {
