@@ -5,7 +5,7 @@
     "lerna": "^3.13.1"
   },
   "dependencies": {
-    "@nger/core": "^1.8.20",
+    "@nger/core": "^1.8.21",
     "@nger/di": "^1.5.13",
     "@nger/rx.effects": "^1.0.2",
     "@nger/rx.store": "^1.0.1",
