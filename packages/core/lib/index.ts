@@ -11,7 +11,6 @@ export * from './core';
 export * from '@nger/di';
 export * from './isDevMode';
 export * from './ngModuleRef';
-export * from './controller';
 export * from './decorator';
 export * from './token';
 export * from './pipeTransform';
