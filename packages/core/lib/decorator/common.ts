@@ -1,6 +1,5 @@
 import { createClassDecorator, IClassDecorator } from '@nger/decorator';
 import { Provider, Type, ModuleWithProviders } from '@nger/di';
-import { PathParams } from './types';
 /**
  * Module
  */
@@ -20,7 +19,7 @@ export const NgModule = Module;
  */
 export const ControllerMetadataKey = `ControllerMetadataKey`;
 export interface ControllerOptions {
-    path: PathParams;
+    path: string;
     providers?: (Provider | Provider[])[];
     useGuards?: Type<any>[];
 }
@@ -34,14 +33,14 @@ export const Controller = createClassDecorator<ControllerOptions | string>(Contr
         } else {
             item.options = {
                 providers: [],
-                path: ``,
+                path: `/`,
                 ...item.options
             }
         }
     } else {
         item.options = {
             providers: [],
-            path: ``
+            path: `/`
         }
     }
 });

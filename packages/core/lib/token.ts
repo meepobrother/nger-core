@@ -1,7 +1,6 @@
-import { InjectionToken, Type } from "@nger/di";
+import { InjectionToken } from "@nger/di";
 import { LogLevel } from "./logger";
 import { INext, HttpRequest, HttpResponse } from "./http";
-import { INgerDecorator } from "@nger/decorator";
 /**
  * app id
  */
@@ -67,3 +66,9 @@ export const PLATFORM_ID = new InjectionToken<string>(`PLATFORM_ID`)
  * 日志Level
  */
 export const LOGGER_LEVEL = new InjectionToken<LogLevel[]>(`LOGGER_LEVEL`);
+export interface Router {
+    path: string;
+    method: string;
+    factory: () => any;
+}
+export const ROUTES = new InjectionToken<Router[]>(`ROUTES`)

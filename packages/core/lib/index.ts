@@ -20,3 +20,4 @@ export * from './config';
 // export * from './adapters';
 export * from './cache';
 export * from './http/index'
+export * from './handlers'

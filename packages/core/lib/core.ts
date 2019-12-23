@@ -4,9 +4,9 @@ import { ALLOW_MULTIPLE_PLATFORMS } from './token';
 import { ApplicationInitStatus } from './application_init_status';
 import { PlatformRef } from './platform_ref';
 import { createPlatformFactory } from './createPlatformFactory';
-import { moduleHandler } from './handlers/module';
+import { handlers } from './handlers';
 export const corePlatform = createPlatformFactory(null, 'core', [
-    moduleHandler,
+    ...handlers,
     {
         provide: ALLOW_MULTIPLE_PLATFORMS,
         useValue: true
