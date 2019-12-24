@@ -28,32 +28,40 @@ const handler = (init: NgModuleRef<any>, current: IClassDecorator<any, ModuleOpt
                 }
                 if (ref.exports) ref.exports.map(it => {
                     const nger = getNger(init.injector, it);
-                    nger.classes.map(it => {
-                        if (it.metadataKey === ModuleMetadataKey) {
-                            const exportRef = ref.getModuleRef(it.type);
-                            if (exportRef) {
-                                const records = exportRef.injector.getRecords();
-                                records.forEach((it, token) => {
-                                    if (token === Injector || token === INJECTOR || token === INJECTOR_SCOPE) { } else {
-                                        init.injector.setStatic([{
-                                            provide: token,
-                                            useFactory: () => {
-                                                return exportRef.get(token)
-                                            },
-                                            deps: []
-                                        }])
-                                    }
-                                })
+                    if (nger.classes.length > 0) {
+                        nger.classes.map(it => {
+                            if (it.metadataKey === ModuleMetadataKey) {
+                                const exportRef = ref.getModuleRef(it.type);
+                                if (exportRef) {
+                                    const records = exportRef.injector.getRecords();
+                                    records.forEach((it, token) => {
+                                        if (token === Injector || token === INJECTOR || token === INJECTOR_SCOPE) { } else {
+                                            init.injector.setStatic([{
+                                                provide: token,
+                                                useFactory: () => {
+                                                    return exportRef.get(token)
+                                                },
+                                                deps: []
+                                            }])
+                                        }
+                                    })
+                                }
                             }
-                        }
-                        else {
-                            init.injector.setStatic([{
-                                provide: it.type,
-                                useFactory: () => ref.get(it.type),
-                                deps: []
-                            }])
-                        }
-                    })
+                            else {
+                                init.injector.setStatic([{
+                                    provide: it.type,
+                                    useFactory: () => ref.get(it.type),
+                                    deps: []
+                                }])
+                            }
+                        })
+                    }else{
+                        init.injector.setStatic([{
+                            provide: it,
+                            useFactory: () => ref.get(it),
+                            deps: []
+                        }])
+                    }
                 });
                 return ref;
             })
