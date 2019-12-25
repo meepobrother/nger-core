@@ -9,10 +9,10 @@
   dependencies:
     reflect-metadata "^0.1.13"
 
-"@nger/di@^1.5.27":
-  version "1.5.27"
-  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.5.27.tgz#c6c98f236ce7213cb5efbb4b1fe6a6f1acf75ef4"
-  integrity sha512-+dX+qWxg2oQrAN8RPVjVpgSbAUcf4tFSe5WXKmQa6S5+IRaLZLG+TSE78djDw9Bx/YZo1XrQiB1ppaWvDmQVNw==
+"@nger/di@^1.5.28":
+  version "1.5.28"
+  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.5.28.tgz#f5f1e195f5b5240ecbca02d44f816aaa6edbc50b"
+  integrity sha512-ZrtvxOlvT38lxmhz8wPh3/QmvzQGsvlAWjayeYTVq7dsS1LckjxhAnggMypftZgQUruTL3oO0ykbAzXO+I2JSA==
   dependencies:
     "@nger/decorator" "^1.1.12"
 
