@@ -1,4 +1,4 @@
-import { StaticProvider, Injector } from "@nger/di";
+import { StaticProvider, Injector, INJECTOR_SCOPE } from "@nger/di";
 import { ControllerMetadataKey, ControllerOptions } from "../decorator";
 import { IClassDecorator, IMethodDecorator } from "@nger/decorator";
 import { prividersToStatic, getNger } from "./util";
@@ -6,7 +6,10 @@ export interface HttpMethodHandler {
     (injector: Injector, item: IMethodDecorator<any, any>, parent: IClassDecorator<any, ControllerOptions>, path: string): any;
 }
 const handler = (init: any, ctrl: IClassDecorator<any, ControllerOptions>, injector: Injector) => {
-    const controllerInjector = injector.create([], ctrl.type.name);
+    const controllerInjector = injector.create([{
+        provide: INJECTOR_SCOPE,
+        useValue: ctrl.type
+    }], ctrl.type.name);
     const options = ctrl.options;
     if (options) {
         const { providers, path } = options;

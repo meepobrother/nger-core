@@ -5,6 +5,11 @@ import { HttpRequest, HttpResponse } from "./http";
  * app id
  */
 export const APP_ID = new InjectionToken(`@nger/core APP_ID`);
+
+/**
+ * 请求id
+ */
+export const REQUEST_ID = new InjectionToken(`@nger/core REQUEST_ID`);
 /**
  * 请求
  */
@@ -17,10 +22,7 @@ export const RESPONSE = new InjectionToken<HttpResponse<any>>(`@nger/core RESPON
  * 结果处理钩子
  */
 export const RESPONSE_HANDLER = new InjectionToken(`@nger/core RESPONSE_HANDLER`);
-/**
- * 请求id
- */
-export const REQUEST_ID = new InjectionToken(`@nger/core REQUEST_ID`);
+
 /**
  * graphql context
  */
