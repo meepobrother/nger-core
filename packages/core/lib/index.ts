@@ -21,3 +21,5 @@ export * from './config';
 export * from './cache';
 export * from './http/index'
 export * from './handlers'
+
+export { setStaticProviderWithRoot } from './handlers/util';

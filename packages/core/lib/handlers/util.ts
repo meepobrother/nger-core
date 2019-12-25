@@ -36,6 +36,11 @@ export function anyReduce<T, O, I>(arrs: IClassDecorator<T, O>[], injector: Inje
     }, init)
 }
 
+export function setStaticProviderWithRoot(injector: Injector, staticProviders: StaticProvider[]) {
+    const root = injector.getInjector('root')
+    setStaticProvider(injector, filterChildProvider(staticProviders, root))
+}
+
 export function setStaticProvider(injector: Injector, provider: StaticProvider[]) {
     injector.setStatic(provider)
     if (injector.parent) {
