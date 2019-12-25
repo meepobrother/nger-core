@@ -29,24 +29,24 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (init: NgModuleRef<any>
                     ref = compileNgModuleRef(injector, imp)
                 } else {
                     ref = compileNgModuleRef(injector, imp.ngModule)
-                    setStaticProviderWithRoot(injector, imp.providers.map(it => prividersToStatic(it)).flat())
+                    injector.setStatic(imp.providers.map(it => prividersToStatic(it)).flat())
                 }
                 return ref;
             })
         }
         // 处理controllers
         if (controllers) {
-            setStaticProviderWithRoot(injector, controllers.map(it => prividersToStatic(it)).flat())
+            injector.setStatic(controllers.map(it => prividersToStatic(it)).flat())
             controllers.map(ctrl => compileAny(undefined, injector, ctrl));
         }
         // 处理reducers
         if (reducers) {
-            setStaticProviderWithRoot(injector, reducers.map(it => prividersToStatic(it)).flat())
+            injector.setStatic(reducers.map(it => prividersToStatic(it)).flat())
             reducers.map(ctrl => compileAny(undefined, injector, ctrl));
         }
         // 处理entities
         if (entities) {
-            setStaticProviderWithRoot(injector, entities.map(it => prividersToStatic(it)).flat())
+            injector.setStatic(entities.map(it => prividersToStatic(it)).flat())
             entities.map(ctrl => compileAny(undefined, injector, ctrl));
         }
     } else {
