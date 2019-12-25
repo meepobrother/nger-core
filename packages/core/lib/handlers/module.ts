@@ -3,7 +3,7 @@ import { ModuleMetadataKey, ModuleOptions } from "../decorator";
 import { IClassDecorator } from "@nger/decorator";
 import { NgModuleRef } from "../ngModuleRef";
 import { compileNgModuleRef, ModuleReduceHandler } from "../compilerFactory";
-import { prividersToStatic, compileAny, setStaticProvider } from "./util";
+import { prividersToStatic, compileAny, setStaticProvider, filterChildProvider } from "./util";
 const handler: ModuleReduceHandler<any, ModuleOptions> = (init: NgModuleRef<any>, current: IClassDecorator<any, ModuleOptions>, scope: string | Type<any>) => {
     const options = current.options;
     const staticProviders: StaticProvider[] = [];
@@ -42,7 +42,8 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (init: NgModuleRef<any>
         injector = init.injector.create([], current.type.name)
     }
     // 设置依赖注入
-    setStaticProvider(injector, staticProviders)
+    const root = injector.getInjector('root')
+    setStaticProvider(injector, filterChildProvider(staticProviders, root))
     init.injector = injector;
     // module type
     init.injector.setStatic([providerToStaticProvider(current.type)]);

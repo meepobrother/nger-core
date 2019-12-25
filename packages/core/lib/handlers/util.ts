@@ -1,6 +1,8 @@
 import { Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR, StaticProvider, INJECTOR, INJECTOR_SCOPE } from "@nger/di"
 import { IClassDecorator } from "@nger/decorator";
 import { ModuleMetadataKey } from "../decorator";
+import { APP_INITIALIZER, PLATFORM_INITIALIZER, APP_ID } from "../token";
+import { PLATFORM_ID } from "@nger/di/lib/injector_ng";
 export type ProviderArray = Provider | Array<ProviderArray>;
 
 export function prividersToStatic(it: ProviderArray) {
@@ -38,13 +40,37 @@ export function setStaticProvider(injector: Injector, provider: StaticProvider[]
     injector.setStatic(provider)
     if (injector.parent) {
         if (injector.parent.scope === 'root') {
-            injector.parent.setStatic(filterProvider(provider))
+            injector.parent.setStatic(provider)
         } else {
-            setStaticProvider(injector.parent, filterProvider(provider))
+            setStaticProvider(injector.parent, provider)
         }
     }
 }
 
-function filterProvider(provider: StaticProvider[]): StaticProvider[] {
-    return provider.filter(it => it.provide !== Injector);
+export function filterChildProvider(provider: StaticProvider[], root: Injector): StaticProvider[] {
+    handlerProvider(provider, root)
+    return provider.filter(it => {
+        if (it.provide === Injector) return false;
+        if (it.provide === APP_INITIALIZER) return false;
+        if (it.provide === PLATFORM_INITIALIZER) return false;
+        if (it.provide === PLATFORM_ID) return false;
+        return true;
+    });
+}
+
+function handlerProvider(provider: StaticProvider[], root: Injector) {
+    const platform = root.getInjector('platform')
+    const rootProvider = provider.filter(it => {
+        if (it.provide === Injector) return true;
+        if (it.provide === APP_INITIALIZER) return true;
+        if (it.provide === PLATFORM_INITIALIZER) {
+            if (platform) platform.setStatic([it])
+            return false
+        }
+        if (it.provide === PLATFORM_ID) {
+            return false
+        }
+        return false;
+    });
+    root.setStatic(rootProvider)
 }
