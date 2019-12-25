@@ -5,8 +5,8 @@ import { APP_INITIALIZER, PLATFORM_INITIALIZER, APP_ID } from "../token";
 import { PLATFORM_ID } from "@nger/di/lib/injector_ng";
 export type ProviderArray = Provider | Array<ProviderArray>;
 
-export function prividersToStatic(it: ProviderArray) {
-    if (Array.isArray(it)) it.map(i => prividersToStatic(i)).flat()
+export function prividersToStatic(it: ProviderArray): StaticProvider | StaticProvider[] {
+    if (Array.isArray(it)) return it.map(i => prividersToStatic(i)).flat()
     else return providerToStaticProvider(it)
 }
 
@@ -66,6 +66,7 @@ export function filterChildProvider(provider: StaticProvider[], root: Injector):
 function handlerProvider(provider: StaticProvider[], root: Injector) {
     const platform = root.getInjector('platform')
     const rootProvider = provider.filter(it => {
+        if (!it) return false;
         if (it.provide === Injector) return true;
         if (it.provide === APP_INITIALIZER) return true;
         if (it.provide === PLATFORM_INITIALIZER) {
