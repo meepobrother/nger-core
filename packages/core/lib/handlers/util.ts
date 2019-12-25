@@ -1,4 +1,4 @@
-import { Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR } from "@nger/di"
+import { Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR, StaticProvider, INJECTOR, INJECTOR_SCOPE } from "@nger/di"
 import { IClassDecorator } from "@nger/decorator";
 import { ModuleMetadataKey } from "../decorator";
 export type ProviderArray = Provider | Array<ProviderArray>;
@@ -34,5 +34,17 @@ export function anyReduce<T, O, I>(arrs: IClassDecorator<T, O>[], injector: Inje
     }, init)
 }
 
-export function isNgModule() { }
-export function isController() { }
+export function setStaticProvider(injector: Injector, provider: StaticProvider[]) {
+    injector.setStatic(provider)
+    if (injector.parent) {
+        if (injector.parent.scope === 'root') {
+            injector.parent.setStatic(filterProvider(provider))
+        } else {
+            setStaticProvider(injector.parent, filterProvider(provider))
+        }
+    }
+}
+
+function filterProvider(provider: StaticProvider[]): StaticProvider[] {
+    return provider.filter(it => it.provide !== Injector);
+}

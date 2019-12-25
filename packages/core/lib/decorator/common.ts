@@ -5,10 +5,9 @@ import { Provider, Type, ModuleWithProviders } from '@nger/di';
  */
 export const ModuleMetadataKey = `ModuleMetadataKey`;
 export interface ModuleOptions {
-    id?: any;
+    id?: string;
     providers?: (Provider[] | Provider)[];
     imports?: Array<Type<any> | ModuleWithProviders<any>>;
-    exports?: Array<any>;
     controllers?: Type<any>[];
 }
 export const Module = createClassDecorator<ModuleOptions>(ModuleMetadataKey);

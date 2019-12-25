@@ -757,13 +757,13 @@
     "@nger/di" "^1.4.0"
     rxjs "^6.5.3"
 
-"@nger/core@^1.8.21":
-  version "1.8.21"
-  resolved "https://registry.yarnpkg.com/@nger/core/-/core-1.8.21.tgz#96eaf1377ab2ae2e1b7e7078d447d598e3faa4fa"
-  integrity sha512-giDfr3kTY4pJaiWQtLv+oK/nYn0LvwqDFQU8MqcvS9cozkUVSZBgtryHcY2jXdXceWCZkK5grKCr3olU3hMbXg==
+"@nger/core@^1.8.33":
+  version "1.8.33"
+  resolved "https://registry.yarnpkg.com/@nger/core/-/core-1.8.33.tgz#1f2f1b4bf7d07897d5f0de6d49079ee266b4810f"
+  integrity sha512-9hfEh8sQKcHM7QTxgNmj8Jd1nXA7L/IJHy7bvESLep+iEyyG4m1Nbau7pSyp76V0A1GbvJFtcAXiMyHDXBpolw==
   dependencies:
     "@nger/decorator" "^1.1.12"
-    "@nger/di" "^1.5.18"
+    "@nger/di" "^1.5.23"
     rxjs "^6.5.3"
 
 "@nger/decorator@^1.1.12":
@@ -787,17 +787,10 @@
   dependencies:
     "@nger/decorator" "^1.1.6"
 
-"@nger/di@^1.5.13":
-  version "1.5.13"
-  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.5.13.tgz#c06cae87661321739bd8320ab5d405c3569086be"
-  integrity sha512-eSzVjk/3IVEKXSdHlyaECppGzPOwkz0qTVDaxKdv44g4JRuJVui8eJi3UHYrmYZged/4ATEhjAwTyECiu/EoMg==
-  dependencies:
-    "@nger/decorator" "^1.1.12"
-
-"@nger/di@^1.5.18":
-  version "1.5.18"
-  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.5.18.tgz#45bfe412661351e05752018c686d54a3772ffecc"
-  integrity sha512-88ZODnSOsdaDTquCTUEdlNJqagYcwH/BagQCCkN4mUf/tPW6hwKhEFXX05oLSNP7fh2ayIkcTjk7SkG6opIRPA==
+"@nger/di@^1.5.23", "@nger/di@^1.5.24":
+  version "1.5.24"
+  resolved "https://registry.yarnpkg.com/@nger/di/-/di-1.5.24.tgz#33abdf287ec4be43f0870473795af56eeba6138f"
+  integrity sha512-Pim5vd8wbwXK19kFiIkhaX/L0rZ9JxZUrZVrM6VDTp2xljOMQpdiT5r1q5DJKnTJYKedMM29s96rLYsdCGRSxQ==
   dependencies:
     "@nger/decorator" "^1.1.12"
 

@@ -19,11 +19,7 @@ export class PlatformRef {
         moduleType: Type<M>
     ): Promise<NgModuleRef<M>> {
         // todo 注入启动参数
-        const moduleRef = compileNgModuleRef(this.injector, moduleType);
-        moduleRef.injector.setStatic([{
-            provide: INJECTOR_SCOPE,
-            useValue: 'root'
-        }])
+        const moduleRef = compileNgModuleRef(this.injector, moduleType, 'root');
         moduleRef.onDestroy(() => remove(this._modules, moduleRef));
         const initStatus: ApplicationInitStatus = moduleRef.injector.get(ApplicationInitStatus, null, InjectFlags.Optional);
         if (initStatus) await initStatus.runInitializers();

@@ -1,4 +1,4 @@
-import { Injector, Type, InjectFlags, IToken } from "@nger/di"
+import { Injector, Type, InjectFlags, IToken, Provider } from "@nger/di"
 import { isWithOnModuleInit } from './life_hooks';
 export class NgModuleRef<T> {
     private _destroyListeners: Function[] = [];
@@ -11,7 +11,7 @@ export class NgModuleRef<T> {
         return this._type;
     }
     imports: NgModuleRef<any>[] = [];
-    exports: any[] = [];
+    providers: (Provider|Provider[])[] = [];
     constructor(injector: Injector, private _type: Type<T>) {
         this.injector = injector;
     }
