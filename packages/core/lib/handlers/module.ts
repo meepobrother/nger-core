@@ -7,22 +7,24 @@ import { prividersToStatic, compileAny, setStaticProvider, filterChildProvider }
 const handler: ModuleReduceHandler<any, ModuleOptions> = (init: NgModuleRef<any>, current: IClassDecorator<any, ModuleOptions>, scope: string | Type<any>) => {
     const options = current.options;
     const staticProviders: StaticProvider[] = [];
-    let injector = init.injector.create([])
+    let injector = init.injector.create([{
+        provide: INJECTOR_SCOPE,
+        useValue: scope
+    }]);
     if (options) {
         const { providers, imports, controllers, id } = options;
-        injector = init.injector.create([], id || current.type.name)
-        staticProviders.push({
+        injector = init.injector.create([{
             provide: INJECTOR_SCOPE,
             useValue: scope
-        });
+        }], id || current.type.name)
         // 处理imports
         if (imports) {
             init.imports = imports.map(imp => {
                 let ref!: NgModuleRef<any>;
                 if (isType(imp)) {
-                    ref = compileNgModuleRef(init.injector, imp)
+                    ref = compileNgModuleRef(injector, imp)
                 } else {
-                    ref = compileNgModuleRef(init.injector, imp.ngModule)
+                    ref = compileNgModuleRef(injector, imp.ngModule)
                     staticProviders.push(...imp.providers.map(it => prividersToStatic(it)).flat())
                 }
                 return ref;
@@ -36,10 +38,13 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (init: NgModuleRef<any>
         // 处理controllers
         if (controllers) {
             injector.setStatic(controllers.map(imp => providerToStaticProvider(imp)).flat())
-            controllers.map(ctrl => compileAny(undefined, init.injector, ctrl));
+            controllers.map(ctrl => compileAny(undefined, injector, ctrl));
         }
     } else {
-        injector = init.injector.create([], current.type.name)
+        injector = init.injector.create([{
+            provide: INJECTOR_SCOPE,
+            useValue: scope
+        }], current.type.name)
     }
     // 设置依赖注入
     const root = injector.getInjector('root')
