@@ -12,7 +12,7 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (init: NgModuleRef<any>
         useValue: scope
     }]);
     if (options) {
-        const { providers, imports, controllers, id } = options;
+        const { providers, imports, controllers, id, reducers, entities } = options;
         injector = init.injector.create([{
             provide: INJECTOR_SCOPE,
             useValue: scope
@@ -39,6 +39,16 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (init: NgModuleRef<any>
         if (controllers) {
             injector.setStatic(controllers.map(imp => providerToStaticProvider(imp)).flat())
             controllers.map(ctrl => compileAny(undefined, injector, ctrl));
+        }
+        // 处理reducers
+        if (reducers) {
+            injector.setStatic(reducers.map(imp => providerToStaticProvider(imp)).flat())
+            reducers.map(ctrl => compileAny(undefined, injector, ctrl));
+        }
+        // 处理entities
+        if (entities) {
+            injector.setStatic(entities.map(imp => providerToStaticProvider(imp)).flat())
+            entities.map(ctrl => compileAny(undefined, injector, ctrl));
         }
     } else {
         injector = init.injector.create([{

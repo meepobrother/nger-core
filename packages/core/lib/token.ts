@@ -24,10 +24,6 @@ export const INFO = new InjectionToken(`@nger/core INFO`);
 export const GLOBAL = new InjectionToken(`@nger/core GLOBAL`);
 
 /**
- * router action reducer map
- */
-export const ROUTER_ACTION_REDUCER_MAP = new InjectionToken<any[]>(`e@nger/core ROUTER_ACTION_REDUCER_MAP`);
-/**
  * 系统初始化
  */
 export const APP_INITIALIZER = new InjectionToken<Array<() => void>>('Application Initializer');
