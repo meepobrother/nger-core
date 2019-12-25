@@ -18,7 +18,6 @@ export * from './logger';
 export * from './guard';
 export * from './config';
 // export * from './adapters';
-export * from './cache';
 export * from './http/index'
 export * from './handlers'
 
