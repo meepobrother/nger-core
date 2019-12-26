@@ -1,31 +1,54 @@
+import { InjectionToken } from "@nger/di";
 import { StaticProvider, Injector, INJECTOR_SCOPE } from "@nger/di";
 import { ControllerMetadataKey, ControllerOptions } from "../decorator";
 import { IClassDecorator, IMethodDecorator } from "@nger/decorator";
 import { prividersToStatic, getNger } from "./util";
 export interface HttpMethodHandler {
-    (injector: Injector, item: IMethodDecorator<any, any>, parent: IClassDecorator<any, ControllerOptions>, path: string): any;
+  (
+    injector: Injector,
+    item: IMethodDecorator<any, any>,
+    parent: IClassDecorator<any, ControllerOptions>,
+    path: string
+  ): any;
 }
-const handler = (init: any, ctrl: IClassDecorator<any, ControllerOptions>, injector: Injector) => {
-    const controllerInjector = injector.create([{
+const handler = (
+  init: any,
+  ctrl: IClassDecorator<any, ControllerOptions>,
+  injector: Injector
+) => {
+  const controllerInjector = injector.create(
+    [
+      {
         provide: INJECTOR_SCOPE,
         useValue: ctrl.type
-    }], ctrl.type.name);
-    const options = ctrl.options;
-    if (options) {
-        const { providers, path } = options;
-        if (providers) controllerInjector.setStatic(providers.map(it => prividersToStatic(it)).flat());
-        if (path) {
-            const nger = getNger(controllerInjector, ctrl.type);
-            nger.methods.map(it => {
-                if (it.metadataKey) {
-                    const handler = controllerInjector.get<HttpMethodHandler>(it.metadataKey);
-                    if (handler) handler(controllerInjector, it, ctrl, path)
-                }
-            })
+      }
+    ],
+    ctrl.type.name
+  );
+  const options = ctrl.options;
+  if (options) {
+    let { providers, path } = options;
+    if (providers)
+      controllerInjector.setStatic(
+        providers.map(it => prividersToStatic(it)).flat()
+      );
+    if (path) {
+      const nger = getNger(controllerInjector, ctrl.type);
+      nger.methods.map(it => {
+        if (it.metadataKey) {
+          const handler = controllerInjector.get<HttpMethodHandler>(
+            it.metadataKey
+          );
+          if (path instanceof InjectionToken) {
+            path = injector.get(path);
+          }
+          if (handler) handler(controllerInjector, it, ctrl, path as string);
         }
+      });
     }
-}
+  }
+};
 export const controllerHandler: StaticProvider = {
-    provide: ControllerMetadataKey,
-    useValue: handler
+  provide: ControllerMetadataKey,
+  useValue: handler
 };
