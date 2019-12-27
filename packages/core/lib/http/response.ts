@@ -200,7 +200,6 @@ export class HttpErrorResponse extends HttpResponseBase implements Error {
   }) {
     // Initialize with a default status of 0 / Unknown Error.
     super(init, 0, "Unknown Error");
-
     // If the response was successful, then this was a parse error. Otherwise, it was
     // a protocol-level failure of some sort. Either the request failed in transit
     // or the server returned an unsuccessful status code.
