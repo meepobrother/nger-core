@@ -15,8 +15,7 @@ export * from './token';
 export * from './pipeTransform';
 export * from './guard';
 export * from './config';
-// export * from './adapters';
-export * from './http/index'
 export * from './handlers'
 export * from './logger';
 export { setStaticProviderWithRoot } from './handlers/util';
+export { getControllers } from './handlers/controller'

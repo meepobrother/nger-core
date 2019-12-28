@@ -1,8 +1,11 @@
-import { InjectionToken } from "@nger/di";
-import { StaticProvider, Injector, INJECTOR_SCOPE } from "@nger/di";
+import { StaticProvider, Injector, INJECTOR_SCOPE, InstanceRef } from "@nger/di";
 import { ControllerMetadataKey, ControllerOptions } from "../decorator";
 import { IClassDecorator, IMethodDecorator } from "@nger/decorator";
 import { prividersToStatic, getNger } from "./util";
+const controllers = new Set();
+export function getControllers() {
+  return [...controllers]
+}
 export interface HttpMethodHandler {
   (
     injector: Injector,
@@ -16,35 +19,21 @@ const handler = (
   ctrl: IClassDecorator<any, ControllerOptions>,
   injector: Injector
 ) => {
-  const controllerInjector = injector.create(
-    [
-      {
-        provide: INJECTOR_SCOPE,
-        useValue: ctrl.type
-      }
-    ],
-    ctrl.type.name
-  );
+  const controllerInjector = injector.create([{
+    provide: INJECTOR_SCOPE,
+    useValue: ctrl.type
+  }], ctrl.type.name);
   const options = ctrl.options;
   if (options) {
     let { providers, path } = options;
-    if (providers)
+    if (providers) {
       controllerInjector.setStatic(
         providers.map(it => prividersToStatic(it)).flat()
       );
+    }
     if (path) {
       const nger = getNger(controllerInjector, ctrl.type);
-      nger.methods.map(it => {
-        if (it.metadataKey) {
-          const handler = controllerInjector.get<HttpMethodHandler>(
-            it.metadataKey
-          );
-          if (path instanceof InjectionToken) {
-            path = injector.get(path);
-          }
-          if (handler) handler(controllerInjector, it, ctrl, path as string);
-        }
-      });
+      controllers.add(new InstanceRef(nger, controllerInjector))
     }
   }
 };

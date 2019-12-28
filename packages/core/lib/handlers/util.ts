@@ -1,15 +1,13 @@
 import { Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR, StaticProvider, INJECTOR, INJECTOR_SCOPE } from "@nger/di"
 import { IClassDecorator } from "@nger/decorator";
 import { ModuleMetadataKey } from "../decorator";
-import { APP_INITIALIZER, PLATFORM_INITIALIZER, APP_ID } from "../token";
+import { APP_INITIALIZER, PLATFORM_INITIALIZER } from "../token";
 import { PLATFORM_ID } from "@nger/di/lib/injector_ng";
 export type ProviderArray = Provider | Array<ProviderArray>;
-
 export function prividersToStatic(it: ProviderArray): StaticProvider | StaticProvider[] {
     if (Array.isArray(it)) return it.map(i => prividersToStatic(i)).flat()
     else return providerToStaticProvider(it)
 }
-
 export function compileAny<M, I>(
     init: I,
     injector: Injector,
@@ -35,12 +33,10 @@ export function anyReduce<T, O, I>(arrs: IClassDecorator<T, O>[], injector: Inje
         throw new Error(`hander ${ModuleMetadataKey} error`)
     }, init)
 }
-
 export function setStaticProviderWithRoot(injector: Injector, staticProviders: StaticProvider[]) {
     const root = injector.getInjector('root')
     setStaticProvider(injector, filterChildProvider(staticProviders, root))
 }
-
 export function setStaticProvider(injector: Injector, provider: StaticProvider[]) {
     injector.setStatic(provider)
     if (injector.parent) {
@@ -51,7 +47,6 @@ export function setStaticProvider(injector: Injector, provider: StaticProvider[]
         }
     }
 }
-
 export function filterChildProvider(provider: StaticProvider[], root: Injector): StaticProvider[] {
     handlerProvider(provider, root)
     return provider.filter(it => {
@@ -62,7 +57,6 @@ export function filterChildProvider(provider: StaticProvider[], root: Injector):
         return true;
     });
 }
-
 function handlerProvider(provider: StaticProvider[], root: Injector) {
     const platform = root.getInjector('platform')
     const rootProvider = provider.filter(it => {
