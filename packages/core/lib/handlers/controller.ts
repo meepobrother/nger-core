@@ -33,7 +33,7 @@ const handler = (
     }
     if (path) {
       const nger = getNger(controllerInjector, ctrl.type);
-      controllers.add(new InstanceRef(nger, controllerInjector))
+      controllers.add(new InstanceRef(nger,ctrl, controllerInjector))
     }
   }
 };
