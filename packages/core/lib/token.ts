@@ -5,6 +5,7 @@ import { LogLevel } from "./logger";
  */
 export const APP_ID = new InjectionToken(`@nger/core APP_ID`);
 
+export const PLATFORM_NAME = new InjectionToken(`@nger/core PLATFORM_NAME`)
 
 /**
  * graphql context

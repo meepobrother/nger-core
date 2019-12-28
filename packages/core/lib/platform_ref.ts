@@ -23,7 +23,7 @@ export class PlatformRef {
     // todo 注入启动参数
     const moduleRef = compileNgModuleRef(this.injector, moduleType, "root");
     moduleRef.onDestroy(() => remove(this._modules, moduleRef));
-    const appInits = moduleRef.get(APP_INITIALIZER);
+    const appInits = moduleRef.get(APP_INITIALIZER, []);
     if (appInits) {
       for (let i = 0; i < appInits.length; i++) {
         await appInits[i]();

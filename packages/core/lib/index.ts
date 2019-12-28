@@ -1,4 +1,3 @@
-export * from './application_init_status';
 export * from './assertPlatform';
 export * from './compilerFactory';
 export * from './createPlatform';
