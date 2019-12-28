@@ -13,7 +13,6 @@ export * from './ngModuleRef';
 export * from './decorator';
 export * from './token';
 export * from './pipeTransform';
-export * from './logger';
 export * from './guard';
 export * from './config';
 // export * from './adapters';

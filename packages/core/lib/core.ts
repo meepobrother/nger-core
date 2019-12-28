@@ -1,4 +1,4 @@
-import { Injector, providerToStaticProvider } from '@nger/di';
+import { Injector } from '@nger/di';
 import { DefaultErrorHandler, ErrorHandler } from './error_handler';
 import { ALLOW_MULTIPLE_PLATFORMS } from './token';
 import { PlatformRef } from './platform_ref';

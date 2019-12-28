@@ -1,5 +1,4 @@
 import { InjectionToken } from "@nger/di";
-import { LogLevel } from "./logger";
 /**
  * app id
  */
@@ -40,8 +39,3 @@ export const ALLOW_MULTIPLE_PLATFORMS = new InjectionToken<boolean>('AllowMultip
  * 当前平台
  */
 export const PLATFORM_ID = new InjectionToken<string>(`PLATFORM_ID`)
-/**
- * 日志Level
- */
-export const LOGGER_LEVEL = new InjectionToken<LogLevel[]>(`LOGGER_LEVEL`);
-
