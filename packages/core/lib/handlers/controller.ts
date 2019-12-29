@@ -21,21 +21,10 @@ const handler = (
 ) => {
   const controllerInjector = injector.create([{
     provide: INJECTOR_SCOPE,
-    useValue: ctrl.type
+    useValue: ctrl.type.name
   }], ctrl.type.name);
-  const options = ctrl.options;
-  if (options) {
-    let { providers, path } = options;
-    if (providers) {
-      controllerInjector.setStatic(
-        providers.map(it => prividersToStatic(it)).flat()
-      );
-    }
-    if (path) {
-      const nger = getNger(controllerInjector, ctrl.type);
-      controllers.add(new InstanceRef(nger,ctrl, controllerInjector))
-    }
-  }
+  const nger = getNger(controllerInjector, ctrl.type);
+  controllers.add(new InstanceRef(nger, ctrl, controllerInjector))
 };
 export const controllerHandler: StaticProvider = {
   provide: ControllerMetadataKey,
