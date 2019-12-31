@@ -39,6 +39,7 @@ export function setStaticProviderWithRoot(injector: Injector, staticProviders: S
 }
 export function setStaticProvider(injector: Injector, provider: StaticProvider[]) {
     injector.setStatic(provider)
+    if (injector.scope === 'root') return;
     if (injector.parent) {
         if (injector.parent.scope === 'root') {
             injector.parent.setStatic(provider)
