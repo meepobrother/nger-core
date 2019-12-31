@@ -24,7 +24,7 @@ const handler = (
     useValue: ctrl.type.name
   }], ctrl.type.name);
   const nger = getNger(controllerInjector, ctrl.type);
-  controllers.add(new NgerRef(nger))
+  controllers.add(new NgerRef(nger, controllerInjector))
 };
 export const controllerHandler: StaticProvider = {
   provide: ControllerMetadataKey,

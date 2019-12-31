@@ -33,20 +33,21 @@ export const Controller = createClassDecorator<ControllerOptions | string>(
         item.options instanceof InjectionToken
       ) {
         item.options = {
+          path: item.options,
           providers: [],
-          path: item.options
+          useGuards: []
         };
       } else {
         item.options = {
           providers: [],
-          path: `/`,
           ...item.options
         };
       }
     } else {
       item.options = {
+        path: item.type.name,
         providers: [],
-        path: `/`
+        useGuards: []
       };
     }
   }

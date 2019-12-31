@@ -1,9 +1,9 @@
 
-import { StaticProvider, InjectionToken, INJECTOR_SCOPE, topInjector } from '@nger/di';
+import { StaticProvider, InjectionToken, INJECTOR_SCOPE, topInjector, PLATFORM_ID } from '@nger/di';
 import { createPlatform, getPlatform } from './createPlatform';
 import { assertPlatform } from './assertPlatform';
 import { PlatformRef } from './platform_ref';
-import { ALLOW_MULTIPLE_PLATFORMS, PLATFORM_ID } from './token';
+import { ALLOW_MULTIPLE_PLATFORMS, } from './token';
 export function createPlatformFactory(
     parentPlatformFactory: ((extraProviders?: StaticProvider[]) => PlatformRef) | null,
     name: string,
