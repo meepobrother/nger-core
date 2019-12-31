@@ -1,7 +1,7 @@
-import { StaticProvider, Injector, INJECTOR_SCOPE, InstanceRef } from "@nger/di";
+import { StaticProvider, Injector, INJECTOR_SCOPE, NgerRef } from "@nger/di";
 import { ControllerMetadataKey, ControllerOptions } from "../decorator";
 import { IClassDecorator, IMethodDecorator } from "@nger/decorator";
-import { prividersToStatic, getNger } from "./util";
+import { getNger } from "./util";
 const controllers = new Set();
 export function getControllers() {
   return [...controllers]
@@ -24,7 +24,7 @@ const handler = (
     useValue: ctrl.type.name
   }], ctrl.type.name);
   const nger = getNger(controllerInjector, ctrl.type);
-  controllers.add(new InstanceRef(nger, ctrl, controllerInjector))
+  controllers.add(new NgerRef(nger))
 };
 export const controllerHandler: StaticProvider = {
   provide: ControllerMetadataKey,

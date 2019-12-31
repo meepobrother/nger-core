@@ -28,7 +28,7 @@
         "url": "https://github.com/meepobrother/nger-core/issues"
     },
     "dependencies": {
-        "@nger/di": "^1.5.46",
+        "@nger/di": "^1.5.50",
         "rxjs": "^6.5.3"
     }
 }

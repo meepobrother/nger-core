@@ -1,8 +1,7 @@
-import { Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR, StaticProvider, INJECTOR, INJECTOR_SCOPE } from "@nger/di"
+import { PLATFORM_ID, Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR, StaticProvider } from "@nger/di"
 import { IClassDecorator } from "@nger/decorator";
 import { ModuleMetadataKey } from "../decorator";
 import { APP_INITIALIZER, PLATFORM_INITIALIZER } from "../token";
-import { PLATFORM_ID } from "@nger/di/lib/injector_ng";
 export type ProviderArray = Provider | Array<ProviderArray>;
 export function prividersToStatic(it: ProviderArray): StaticProvider | StaticProvider[] {
     if (Array.isArray(it)) return it.map(i => prividersToStatic(i)).flat()
