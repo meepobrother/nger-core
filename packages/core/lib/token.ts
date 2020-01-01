@@ -23,3 +23,6 @@ export const PLATFORM_INITIALIZER = new InjectionToken<Array<() => void>>('Platf
  * 允许多个平台
  */
 export const ALLOW_MULTIPLE_PLATFORMS = new InjectionToken<boolean>('AllowMultipleToken');
+
+
+export const MAIN_PATH = new InjectionToken<boolean>('MAIN_PATH');
