@@ -43,8 +43,14 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (
         let ref!: NgModuleRef<any>;
         if (isType(imp)) {
           ref = compileNgModuleRef(injector, imp);
+          injector.setStatic([
+            providerToStaticProvider(imp)
+          ])
         } else {
           ref = compileNgModuleRef(injector, imp.ngModule);
+          injector.setStatic([
+            providerToStaticProvider(imp.ngModule)
+          ])
           setStaticProviderWithRoot(
             injector,
             imp.providers.map(it => prividersToStatic(it)).flat()
