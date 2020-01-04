@@ -1,4 +1,4 @@
-import { PLATFORM_ID, Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR, StaticProvider } from "@nger/di"
+import { PLATFORM_ID, Provider, providerToStaticProvider, Injector, Type, InjectFlags, GET_INGER_DECORATOR, StaticProvider, INJECTOR, INJECTOR_SCOPE } from "@nger/di"
 import { IClassDecorator } from "@nger/decorator";
 import { ModuleMetadataKey } from "../decorator";
 import { APP_INITIALIZER, PLATFORM_INITIALIZER } from "../token";
@@ -32,10 +32,16 @@ export function anyReduce<T, O, I>(arrs: IClassDecorator<T, O>[], injector: Inje
         throw new Error(`hander ${ModuleMetadataKey} error`)
     }, init)
 }
+/**
+ * 设置static provider to Root
+ */
 export function setStaticProviderWithRoot(injector: Injector, staticProviders: StaticProvider[]) {
     const root = injector.getInjector('root')
     setStaticProvider(injector, filterChildProvider(staticProviders, root))
 }
+/**
+ * 迭代设置，直到root
+ */
 export function setStaticProvider(injector: Injector, provider: StaticProvider[]) {
     injector.setStatic(provider)
     if (injector.scope === 'root') return;
@@ -51,6 +57,8 @@ export function filterChildProvider(provider: StaticProvider[], root: Injector):
     handlerProvider(provider, root)
     return provider.filter(it => {
         if (it.provide === Injector) return false;
+        if (it.provide === INJECTOR_SCOPE) return false;
+        if (it.provide === INJECTOR) return false;
         if (it.provide === APP_INITIALIZER) return false;
         if (it.provide === PLATFORM_INITIALIZER) return false;
         if (it.provide === PLATFORM_ID) return false;
@@ -59,10 +67,17 @@ export function filterChildProvider(provider: StaticProvider[], root: Injector):
 }
 function handlerProvider(provider: StaticProvider[], root: Injector) {
     const platform = root.getInjector('platform')
+    /**
+     * 往根注入的
+     */
     const rootProvider = provider.filter(it => {
         if (!it) return false;
-        if (it.provide === Injector) return true;
-        if (it.provide === APP_INITIALIZER) return true;
+        if (it.provide === Injector) return false;
+        if (it.provide === INJECTOR) return false;
+        if (it.provide === INJECTOR_SCOPE) return false;
+        if (it.provide === APP_INITIALIZER) {
+            return true
+        }
         if (it.provide === PLATFORM_INITIALIZER) {
             if (platform) platform.setStatic([it])
             return false

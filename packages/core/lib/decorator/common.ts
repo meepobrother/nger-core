@@ -9,8 +9,7 @@ export interface ModuleOptions {
   providers?: (Provider[] | Provider)[];
   imports?: Array<Type<any> | ModuleWithProviders<any>>;
   controllers?: Type<any>[];
-  reducers?: Type<any>[];
-  entities?: Type<any>[];
+  exports?: Type<any>[];
 }
 export const Module = createClassDecorator<ModuleOptions>(ModuleMetadataKey);
 export const NgModule = Module;

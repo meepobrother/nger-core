@@ -12,6 +12,7 @@ export class NgModuleRef<T> {
   }
   imports: NgModuleRef<any>[] = [];
   providers: (Provider | Provider[])[] = [];
+  exports: Type<any>[] = [];
   constructor(injector: Injector, private _type: Type<T>) {
     this.injector = injector;
   }

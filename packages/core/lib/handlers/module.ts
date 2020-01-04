@@ -3,7 +3,10 @@ import {
   providerToStaticProvider,
   isType,
   INJECTOR_SCOPE,
-  Type
+  Type,
+  Injector,
+  ModuleWithProviders,
+  stringify
 } from "@nger/di";
 import { ModuleMetadataKey, ModuleOptions } from "../decorator";
 import { IClassDecorator } from "@nger/decorator";
@@ -14,6 +17,12 @@ import {
   compileAny,
   setStaticProviderWithRoot
 } from "./util";
+/**
+ * providers 是全局的 ModuleWithProviders是个人的
+ * @param init 
+ * @param current 
+ * @param scope 
+ */
 const handler: ModuleReduceHandler<any, ModuleOptions> = (
   init: NgModuleRef<any>,
   current: IClassDecorator<any, ModuleOptions>,
@@ -24,10 +33,14 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (
     {
       provide: INJECTOR_SCOPE,
       useValue: scope
+    },
+    {
+      provide: NgModuleRef,
+      useValue: init
     }
   ]);
   if (options) {
-    const { providers, imports, controllers, id, reducers, entities } = options;
+    const { providers, imports, controllers, id, exports } = options;
     injector = init.injector.create(
       [
         {
@@ -37,27 +50,10 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (
       ],
       id || current.type.name
     );
+    if (exports) init.exports = exports;
     // 处理imports
     if (imports) {
-      init.imports = imports.map(imp => {
-        let ref!: NgModuleRef<any>;
-        if (isType(imp)) {
-          ref = compileNgModuleRef(injector, imp);
-          injector.setStatic([
-            providerToStaticProvider(imp)
-          ])
-        } else {
-          ref = compileNgModuleRef(injector, imp.ngModule);
-          injector.setStatic([
-            providerToStaticProvider(imp.ngModule)
-          ])
-          setStaticProviderWithRoot(
-            injector,
-            imp.providers.map(it => prividersToStatic(it)).flat()
-          );
-        }
-        return ref;
-      });
+      init.imports = handlerImports(imports, injector)
     }
     // 设置provider
     if (providers) {
@@ -69,18 +65,12 @@ const handler: ModuleReduceHandler<any, ModuleOptions> = (
     }
     // 处理controllers
     if (controllers) {
-      injector.setStatic(controllers.map(it => prividersToStatic(it)).flat());
+      // 木有缓存
+      injector.setStatic(controllers.map(it => prividersToStatic(it)).flat().map((it: StaticProvider) => ({
+        ...it,
+        noCache: true
+      } as StaticProvider)));
       controllers.map(ctrl => compileAny(undefined, injector, ctrl));
-    }
-    // 处理reducers
-    if (reducers) {
-      injector.setStatic(reducers.map(it => prividersToStatic(it)).flat());
-      reducers.map(ctrl => compileAny(undefined, injector, ctrl));
-    }
-    // 处理entities
-    if (entities) {
-      injector.setStatic(entities.map(it => prividersToStatic(it)).flat());
-      entities.map(ctrl => compileAny(undefined, injector, ctrl));
     }
   } else {
     injector = init.injector.create(
@@ -103,3 +93,27 @@ export const moduleHandler: StaticProvider = {
   provide: ModuleMetadataKey,
   useValue: handler
 };
+
+function handlerImports(imports: Array<Type<any> | ModuleWithProviders<any>>, injector: Injector) {
+  return imports.map(imp => {
+    let ref!: NgModuleRef<any>;
+    if (isType(imp)) {
+      ref = compileNgModuleRef(injector, imp);
+      if (ref.exports) { }
+      injector.setStatic([
+        providerToStaticProvider(imp)
+      ])
+    } else {
+      ref = compileNgModuleRef(injector, imp.ngModule);
+      injector.setStatic([
+        providerToStaticProvider(imp.ngModule)
+      ])
+      setStaticProviderWithRoot(
+        injector,
+        imp.providers.map(it => prividersToStatic(it)).flat()
+      );
+    }
+    handlerImports(ref.exports, injector)
+    return ref;
+  });
+}

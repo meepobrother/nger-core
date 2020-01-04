@@ -14,7 +14,7 @@ export function compileNgModuleRef<M>(
     const nger = getDecorator(moduleType)
     const ngModuleRef = moduleReduce<M, any>(nger.classes, init, scope)
     if (ngModuleRef) return ngModuleRef;
-    throw new Error(`Compile Ng ModuleRef Error`)
+    throw new Error(`Compile Ng ModuleRef Error!${moduleType.name} is not has @Module decorator`)
 }
 export interface ModuleReduceHandler<T, O> {
     (old: NgModuleRef<T>, current: IClassDecorator<T, O>, scope: string | Type<T>): NgModuleRef<T>;
