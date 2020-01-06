@@ -18,3 +18,7 @@ export * from './config';
 export * from './handlers'
 export * from './logger';
 export { setStaticProviderWithRoot } from './handlers/util';
+
+export interface Abstract<T> extends Function {
+    prototype: T;
+}

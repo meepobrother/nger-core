@@ -54,29 +54,21 @@ export function setStaticProvider(injector: Injector, provider: StaticProvider[]
     }
 }
 export function filterChildProvider(provider: StaticProvider[], root: Injector): StaticProvider[] {
-    handlerProvider(provider, root)
-    return provider.filter(it => {
-        if (it.provide === Injector) return false;
-        if (it.provide === INJECTOR_SCOPE) return false;
-        if (it.provide === INJECTOR) return false;
-        if (it.provide === APP_INITIALIZER) return false;
-        if (it.provide === PLATFORM_INITIALIZER) return false;
-        if (it.provide === PLATFORM_ID) return false;
-        return true;
-    });
+    return handlerProvider(provider, root)
 }
-function handlerProvider(provider: StaticProvider[], root: Injector) {
+function handlerProvider(provider: StaticProvider[], root: Injector): StaticProvider[] {
     const platform = root.getInjector('platform')
     /**
      * 往根注入的
      */
-    const rootProvider = provider.filter(it => {
+    return provider.filter(it => {
         if (!it) return false;
         if (it.provide === Injector) return false;
         if (it.provide === INJECTOR) return false;
         if (it.provide === INJECTOR_SCOPE) return false;
         if (it.provide === APP_INITIALIZER) {
-            return true
+            if (platform) platform.setStatic([it])
+            return false
         }
         if (it.provide === PLATFORM_INITIALIZER) {
             if (platform) platform.setStatic([it])
@@ -85,7 +77,6 @@ function handlerProvider(provider: StaticProvider[], root: Injector) {
         if (it.provide === PLATFORM_ID) {
             return false
         }
-        return false;
+        return true;
     });
-    root.setStatic(rootProvider)
 }
